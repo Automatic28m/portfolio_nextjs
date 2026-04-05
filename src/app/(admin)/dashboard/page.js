@@ -24,7 +24,7 @@ export default async function DashboardPage() {
         <div className="space-y-8">
             <div>
                 <h1 className="text-3xl font-bold font-durer text-slate-900">Admin Dashboard</h1>
-                <p className="text-slate-500">Welcome back, Phanlop! Here is your portfolio at a glance.</p>
+                <p className="text-slate-700">Welcome back, Phanlop! Here is your portfolio at a glance.</p>
             </div>
 
             {/* Main Stats Grid */}

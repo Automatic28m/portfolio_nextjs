@@ -233,21 +233,21 @@ export default function CreatePortfolioForm({ portfolioTypes, skillTypes }) {
     return (
         <div className="max-w-3xl mx-auto py-10 px-4">
             <Toaster />
-            <form onSubmit={handleSubmit} className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 space-y-8">
+            <form onSubmit={handleSubmit} className="bg-white text-slate-900 p-8 rounded-2xl shadow-sm border border-slate-100 space-y-8">
                 <div className="border-b border-slate-100 pb-4">
                     <h2 className="text-2xl font-bold font-durer text-slate-900 text-3xl">Create New Project</h2>
-                    <p className="text-slate-400 text-sm">Fill in the details to update your RMUTT portfolio.</p>
+                    <p className="text-slate-700 text-sm">Fill in the details to update your RMUTT portfolio.</p>
                 </div>
 
                 {/* 1. Title & Type */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                        <label className="text-xs font-black uppercase text-slate-400 tracking-widest">Project Title</label>
-                        <input name="title" required placeholder="e.g. Smart Bin System" className="w-full p-3 text-slate-500 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition" />
+                        <label className="text-xs font-black uppercase text-slate-700 tracking-widest">Project Title</label>
+                        <input name="title" required placeholder="e.g. Smart Bin System" className="w-full p-3 text-slate-900 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition" />
                     </div>
                     <div className="space-y-2">
-                        <label className="text-xs font-black uppercase text-slate-400 tracking-widest">Category Type</label>
-                        <select name="type_id" required className="w-full p-3 text-slate-500 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition">
+                        <label className="text-xs font-black uppercase text-slate-700 tracking-widest">Category Type</label>
+                        <select name="type_id" required className="w-full p-3 text-slate-900 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition">
                             <option value="">Select Category</option>
                             {/* ✅ Now fetching and mapping correctly */}
                             {portfolioTypes.map((type) => (
@@ -259,23 +259,23 @@ export default function CreatePortfolioForm({ portfolioTypes, skillTypes }) {
 
                 {/* 2. Contents */}
                 <div className="space-y-2">
-                    <label className="text-xs font-black uppercase text-slate-400 tracking-widest">Contents / Description</label>
-                    <textarea name="contents" rows={4} placeholder="Describe the project goals and your role..." className="w-full p-3 text-slate-500 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition" />
+                    <label className="text-xs font-black uppercase text-slate-700 tracking-widest">Contents / Description</label>
+                    <textarea name="contents" rows={4} placeholder="Describe the project goals and your role..." className="w-full p-3 text-slate-900 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition" />
                 </div>
 
                 {/* 3. Location & Date */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                        <label className="text-xs font-black uppercase text-slate-400 tracking-widest">Event Location</label>
-                        <input name="location" placeholder="e.g. RMUTT, Pathum Thani" className="w-full p-3 text-slate-500 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition" />
+                        <label className="text-xs font-black uppercase text-slate-700 tracking-widest">Event Location</label>
+                        <input name="location" placeholder="e.g. RMUTT, Pathum Thani" className="w-full p-3 text-slate-900 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition" />
                     </div>
                     <div className="space-y-2 flex flex-col">
-                        <label className="text-xs font-black uppercase text-slate-400 tracking-widest">Project Date</label>
+                        <label className="text-xs font-black uppercase text-slate-700 tracking-widest">Project Date</label>
                         <DatePicker
                             selected={eventDate}
                             onChange={(date) => setEventDate(date)}
                             dateFormat="yyyy-MM-dd"
-                            className="w-full p-3 text-slate-500 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition"
+                            className="w-full p-3 text-slate-900 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition"
                         />
                     </div>
                 </div>
@@ -294,7 +294,7 @@ export default function CreatePortfolioForm({ portfolioTypes, skillTypes }) {
 
                 {/* 5. Skill Tags Checklist */}
                 <div className="space-y-4">
-                    <label className="text-xs font-black uppercase text-slate-400 tracking-widest">Technologies / Skill Tags</label>
+                    <label className="text-xs font-black uppercase text-slate-700 tracking-widest">Technologies / Skill Tags</label>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                         {/* ✅ Now mapping Skill Tags with colorMap */}
                         {skillTypes.map((skill) => {

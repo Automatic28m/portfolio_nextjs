@@ -10,7 +10,7 @@ export default async function ManagePortfolioPage() {
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
-                <h1 className="text-3xl font-bold font-durer">Manage Portfolio</h1>
+                <h1 className="text-3xl font-bold font-durer text-slate-900">Manage Portfolio</h1>
                 <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
                     + Add New Project
                 </button>

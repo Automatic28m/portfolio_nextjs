@@ -25,7 +25,7 @@ export default function DashboardSmallCard({ title, number, icon, bg_color, col_
                 {icon}
             </div>
             <div>
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">
+                <p className="text-xs font-bold text-slate-700 uppercase tracking-widest mb-1">
                     {title}
                 </p>
                 <p className="text-2xl font-black text-slate-900 leading-none">

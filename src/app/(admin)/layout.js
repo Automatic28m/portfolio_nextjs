@@ -42,7 +42,7 @@ export default function AdminLayout({ children }) {
 
             {/* 4. Main Content Area */}
             {/* We use md:ml-44 to push content to the right of the fixed sidebar */}
-            <main className="flex-1 md:ml-44 min-h-screen">
+            <main className="flex-1 md:ml-44 min-h-screen text-slate-900">
                 {/* Optional: Add a Top Navbar here if you want */}
                 <div className="p-4 md:p-8">
                     {children} {/* This replaces <Outlet /> */}
