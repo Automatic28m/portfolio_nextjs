@@ -1,65 +1,128 @@
-import Image from "next/image";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
-export default function Home() {
+import { 
+    getSkills, getProjects, getAchievements, 
+    getInternships, getActivities, getEducations 
+} from "@/services/portfolioService";
+
+// UI Components
+import Navbar from "@/components/navbar";
+import Footer from "@/components/footer";
+import TextScrollerComponent from "@/components/textScrollerComponent";
+import LogoScrollerComponent from "@/components/logoScrollerComponent copy";
+import PortfolioCard from "@/components/portfolioCard";
+import FadeInOnView from "@/components/animations/fadeInOnView";
+
+// Sections
+import HeroSection from "@/components/sections/HeroSection";
+import AboutSection from "@/components/sections/AboutSection";
+import StorySection from "@/components/sections/StorySection";
+
+export const metadata = {
+  title: "Phanlop's Portfolio | Computer Engineer",
+  description: "Portfolio of Phanlop Boonluea, Computer Engineering student at RMUTT.",
+};
+
+export default async function PortfolioPage() {
+  const [
+    skills,
+    projects,
+    achievements,
+    internships,
+    activities,
+    educations
+  ] = await Promise.all([
+    getSkills(),
+    getProjects(),
+    getAchievements(),
+    getInternships(),
+    getActivities(),
+    getEducations()
+  ]);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+    <div className="flex flex-col min-h-screen font-subject">
+      <Navbar />
+
+      <main className="pt-16 min-h-screen bg-white text-gray-800">
+
+        <HeroSection />
+        <TextScrollerComponent className="bg-slate-50 border-y border-slate-100" />
+        {/* <AboutSection /> */}
+        <StorySection />
+
+        {/* Skills Section - Cleaned Background */}
+        <section id="skills" className="px-6 py-20 bg-slate-50">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-3xl font-semibold mb-12 font-durer text-center">Tech Stacks</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 max-w-xl mx-auto">
+              {skills.map((item, index) => (
+                <span key={index} className="bg-white p-5 rounded-xl shadow-sm border border-slate-100 text-center font-medium hover:text-blue-600 hover:border-blue-200 transition-all duration-300">
+                  {item.title}
+                </span>
+              ))}
+            </div>
+            <div className="mt-16">
+              <LogoScrollerComponent />
+            </div>
+          </div>
+        </section>
+
+        {/* Reusable Portfolio Sections */}
+        <PortfolioSection title="Projects" id="projects" data={projects} />
+        <PortfolioSection title="Achievements" id="achievements" data={achievements} bgGray />
+        <PortfolioSection title="Internship Experiences" id="internships" data={internships} />
+        <PortfolioSection title="Academic Activities" id="activities" data={activities} bgGray />
+
+        {/* Education Section */}
+        <section id="education" className="px-6 py-20 bg-white">
+          <FadeInOnView>
+            <h2 className="text-3xl font-durer font-semibold text-center mb-12">Education</h2>
+          </FadeInOnView>
+          <ul className="max-w-2xl mx-auto space-y-6">
+            {educations.map((item, index) => (
+              <FadeInOnView key={index}>
+                <div className="bg-slate-50 p-6 rounded-xl border-l-4 border-blue-600 shadow-sm">
+                  <h3 className="font-bold text-xl text-slate-900">{item.title}</h3>
+                  <p className="text-blue-600 font-semibold mt-1">{item.contents}</p>
+                  <p className="text-sm text-slate-500 mt-2">
+                    {item.event_date ? new Date(item.event_date).getFullYear() : 'N/A'}
+                  </p>
+                </div>
+              </FadeInOnView>
+            ))}
+          </ul>
+        </section>
+
+        <Footer />
       </main>
     </div>
+  );
+}
+
+async function PortfolioSection({ title, id, data, bgGray = false }) {
+  return (
+    <section id={id} className={`px-6 py-20 ${bgGray ? 'bg-slate-50' : 'bg-white'}`}>
+      <div className="max-w-5xl mx-auto">
+        <h2 className="text-3xl font-durer font-semibold text-center mb-12">{title}</h2>
+        <div className="grid gap-8 md:grid-cols-2">
+          {/* 2. Map through data and fetch skills for each item */}
+          {await Promise.all(data.map(async (item, index) => {
+            const { getSkillTypesByPortfolioId } = await import("@/services/portfolioService");
+            const skillTypes = await getSkillTypesByPortfolioId(item.id);
+
+            return (
+              <PortfolioCard
+                item={item}
+                index={index}
+                key={item.id}
+                skillTypes={skillTypes} // Pass as props
+              />
+            );
+          }))}
+        </div>
+      </div>
+    </section>
   );
 }
