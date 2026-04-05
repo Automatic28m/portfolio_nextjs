@@ -56,10 +56,10 @@ export default function PortfolioTableClient({ initialData }) {
             name: 'Actions',
             cell: row => (
                 <div className='flex gap-2'>
-                    <Link href={`/admin/portfolio/edit/${row.id}`} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition">
+                    <Link href={`/portfolio/edit/${row.id}`} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition">
                         <Edit3 size={18} />
                     </Link>
-                    <Link href={`/admin/portfolio/gallery/${row.id}`} className="p-2 text-cyan-600 hover:bg-cyan-50 rounded-lg transition flex items-center gap-1">
+                    <Link href={`/portfolio/gallery/${row.id}`} className="p-2 text-cyan-600 hover:bg-cyan-50 rounded-lg transition flex items-center gap-1">
                         <ImageIcon size={18} />
                         <span className="text-xs font-bold">({row.gallery_count})</span>
                     </Link>

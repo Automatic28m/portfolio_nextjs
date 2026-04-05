@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { uploadToCloudinary, extractCloudinaryPublicId, deleteFromCloudinary } from "@/lib/cloudinary";
-import * as service from "@/services/portfolioService";
+import * as service from "@/services/galleryService";
 
 export async function uploadGalleryImagesAction(portfolioId, formData) {
     try {
@@ -25,8 +25,8 @@ export async function uploadGalleryImagesAction(portfolioId, formData) {
 
 export async function deleteGalleryImageAction(imageId, portfolioId) {
     try {
-        const image = await service.getGalleryImageById(imageId);
-        const publicId = extractCloudinaryPublicId(image[0].img);
+        const image = await service.getGalleryById(imageId);
+        const publicId = image?.img ? extractCloudinaryPublicId(image.img) : null;
         
         if (publicId) await deleteFromCloudinary(publicId);
         

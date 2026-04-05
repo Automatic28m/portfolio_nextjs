@@ -11,7 +11,7 @@ export async function uploadImageGalleryToPortfolioId(id, imageFilenames) {
 
 export async function getGalleryById(id) {
     const [rows] = await db.query("SELECT * FROM gallery WHERE id = ?", [id]);
-    return rows;
+    return rows[0] || null;
 }
 
 export async function getGalleryByPortfolioId(id) {
