@@ -11,22 +11,222 @@ import { colorMap } from "@/utils/colors";
 export default function CreatePortfolioForm({ portfolioTypes, skillTypes }) {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState("");
     const [eventDate, setEventDate] = useState(new Date());
+
+    async function getCloudinarySignature(folder) {
+        const response = await fetch("/api/cloudinary-signature", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ folder }),
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Failed to get upload signature: ${errorText}`);
+        }
+
+        return response.json();
+    }
+
+    function renameWithExtension(fileName, extension) {
+        const dotIndex = fileName.lastIndexOf(".");
+        if (dotIndex === -1) return `${fileName}.${extension}`;
+        return `${fileName.slice(0, dotIndex)}.${extension}`;
+    }
+
+    async function optimizeImageFile(file, { maxDimension, quality = 0.8, outputType = "image/webp" }) {
+        if (!file?.type?.startsWith("image/")) {
+            return file;
+        }
+
+        const bitmap = await createImageBitmap(file);
+        const { width, height } = bitmap;
+        const scale = Math.min(1, maxDimension / Math.max(width, height));
+        const targetWidth = Math.max(1, Math.round(width * scale));
+        const targetHeight = Math.max(1, Math.round(height * scale));
+
+        const canvas = document.createElement("canvas");
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+        const context = canvas.getContext("2d");
+
+        if (!context) {
+            bitmap.close();
+            return file;
+        }
+
+        context.drawImage(bitmap, 0, 0, targetWidth, targetHeight);
+        bitmap.close();
+
+        const optimizedBlob = await new Promise((resolve) => {
+            canvas.toBlob(
+                (blob) => resolve(blob || file),
+                outputType,
+                quality
+            );
+        });
+
+        if (optimizedBlob.size >= file.size) {
+            return file;
+        }
+
+        return new File([optimizedBlob], renameWithExtension(file.name, "webp"), {
+            type: outputType,
+            lastModified: Date.now(),
+        });
+    }
+
+    async function runWithConcurrency(items, concurrency, workerFn) {
+        if (!items.length) return [];
+        const results = new Array(items.length);
+        let currentIndex = 0;
+
+        async function runWorker() {
+            while (currentIndex < items.length) {
+                const itemIndex = currentIndex;
+                currentIndex += 1;
+                results[itemIndex] = await workerFn(items[itemIndex], itemIndex);
+            }
+        }
+
+        await Promise.all(
+            Array.from({ length: Math.min(concurrency, items.length) }, () => runWorker())
+        );
+
+        return results;
+    }
+
+    async function uploadFileToCloudinary(file, folder, signatureData) {
+        const startTime = Date.now();
+        const uploadData = new FormData();
+        uploadData.append("file", file);
+        uploadData.append("api_key", signatureData.apiKey);
+        uploadData.append("timestamp", signatureData.timestamp.toString());
+        uploadData.append("signature", signatureData.signature);
+        uploadData.append("folder", folder);
+
+        console.log(`Starting upload for ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB) to ${folder}`);
+
+        let uploadResponse;
+        try {
+            uploadResponse = await fetch(`https://api.cloudinary.com/v1_1/${signatureData.cloudName}/image/upload`, {
+                method: "POST",
+                body: uploadData,
+                signal: AbortSignal.timeout(120000), // 2 minute timeout
+            });
+        } catch (fetchError) {
+            if (fetchError.name === 'TimeoutError') {
+                console.error(`Upload timeout for ${file.name} after 2 minutes`);
+                throw new Error(`Upload timeout for ${file.name}. The file may be too large or there may be network issues.`);
+            }
+            console.error(`Upload fetch error for ${file.name}:`, fetchError);
+            throw new Error(`Upload failed for ${file.name}: ${fetchError.message}`);
+        }
+
+        if (!uploadResponse.ok) {
+            const errorText = await uploadResponse.text();
+            console.error(`Upload failed for ${file.name}:`, errorText);
+            throw new Error(`Cloudinary upload failed (${uploadResponse.status}): ${errorText}`);
+        }
+
+        const result = await uploadResponse.json();
+        console.log(`Upload successful for ${file.name}: ${result.secure_url}`);
+        console.log(`Uploaded ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB) in ${Date.now() - startTime}ms`);
+        return result.secure_url;
+    }
 
     async function handleSubmit(event) {
         event.preventDefault();
         setLoading(true);
-        const formData = new FormData(event.currentTarget);
-        formData.append("event_date", eventDate.toISOString().split('T')[0]);
+        setUploadProgress("Preparing upload...");
+        const startTime = Date.now();
 
-        const result = await createPortfolioAction(formData);
+        try {
+            const formData = new FormData(event.currentTarget);
+            const eventDateString = eventDate.toISOString().split('T')[0];
+            const title = formData.get("title");
+            const contents = formData.get("contents");
+            const location = formData.get("location");
+            const type_id = formData.get("type_id");
+            const skillIds = formData.getAll("skill_type_ids");
+            const thumbnailFile = formData.get("thumbnail");
+            const galleryFiles = formData.getAll("gallery_images").filter(
+                (file) => file && file.size > 0
+            );
 
-        if (result.success) {
-            toast.success("Project Created Successfully!");
-            router.push("/admin/portfolio");
-        } else {
-            toast.error(result.error || "Failed to create project");
+            setUploadProgress("Optimizing images for faster upload...");
+            const optimizeStart = Date.now();
+            const optimizedThumbnail = thumbnailFile && thumbnailFile.size > 0
+                ? await optimizeImageFile(thumbnailFile, { maxDimension: 1280, quality: 0.8 })
+                : null;
+            const optimizedGalleryFiles = await Promise.all(
+                galleryFiles.map((file) => optimizeImageFile(file, { maxDimension: 1920, quality: 0.8 }))
+            );
+            const originalBytes = [thumbnailFile, ...galleryFiles]
+                .filter(Boolean)
+                .reduce((sum, file) => sum + file.size, 0);
+            const optimizedBytes = [optimizedThumbnail, ...optimizedGalleryFiles]
+                .filter(Boolean)
+                .reduce((sum, file) => sum + file.size, 0);
+            console.log(`Image optimization took: ${Date.now() - optimizeStart}ms`);
+            console.log(
+                `Payload reduced from ${(originalBytes / 1024 / 1024).toFixed(2)}MB to ${(optimizedBytes / 1024 / 1024).toFixed(2)}MB`
+            );
+
+            // Get signatures once per folder
+            setUploadProgress("Getting upload permissions...");
+            const sigStart = Date.now();
+            const thumbnailSig = optimizedThumbnail ? await getCloudinarySignature("portfolio_thumbnails") : null;
+            const gallerySig = optimizedGalleryFiles.length > 0 ? await getCloudinarySignature("portfolio_galleries") : null;
+            console.log(`Signature generation took: ${Date.now() - sigStart}ms`);
+
+            // Use low concurrency on gallery uploads to avoid saturating slow uplink bandwidth.
+            setUploadProgress(`Uploading ${optimizedGalleryFiles.length + (optimizedThumbnail ? 1 : 0)} files...`);
+            const uploadStart = Date.now();
+            let thumbnailUrl = null;
+            if (optimizedThumbnail && thumbnailSig) {
+                thumbnailUrl = await uploadFileToCloudinary(optimizedThumbnail, "portfolio_thumbnails", thumbnailSig);
+            }
+
+            const galleryUrls = gallerySig
+                ? await runWithConcurrency(
+                    optimizedGalleryFiles,
+                    2,
+                    (file, index) => {
+                        setUploadProgress(`Uploading gallery image ${index + 1}/${optimizedGalleryFiles.length}...`);
+                        return uploadFileToCloudinary(file, "portfolio_galleries", gallerySig);
+                    }
+                )
+                : [];
+            console.log(`File uploads took: ${Date.now() - uploadStart}ms`);
+
+            setUploadProgress("Saving to database...");
+            const dbStart = Date.now();
+            const result = await createPortfolioAction({
+                title,
+                contents,
+                location,
+                event_date: eventDateString,
+                type_id,
+                skill_type_ids: skillIds,
+                thumbnailUrl,
+                galleryUrls,
+            });
+            console.log(`Database save took: ${Date.now() - dbStart}ms`);
+            console.log(`Total time: ${Date.now() - startTime}ms`);
+
+            if (result.success) {
+                toast.success("Project Created Successfully!");
+                router.push("/admin/portfolio");
+            } else {
+                throw new Error(result.error || "Failed to create project");
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error(error.message || "Failed to create project");
             setLoading(false);
+            setUploadProgress("");
         }
     }
 
@@ -124,7 +324,7 @@ export default function CreatePortfolioForm({ portfolioTypes, skillTypes }) {
                         type="submit"
                         className="w-full py-4 bg-blue-600 text-white font-black uppercase tracking-widest rounded-xl hover:bg-blue-700 hover:shadow-lg shadow-blue-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        {loading ? "Uploading to Cloudinary..." : "Create Portfolio Entry"}
+                        {loading ? (uploadProgress || "Uploading to Cloudinary...") : "Create Portfolio Entry"}
                     </button>
                 </div>
             </form>

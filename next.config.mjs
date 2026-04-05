@@ -11,10 +11,10 @@ const nextConfig = {
   },
   experimental: {
     serverActions: {
-      bodySizeLimit: '50mb', 
+      bodySizeLimit: '50mb',
     },
+    proxyClientMaxBodySize: '50mb',
   },
-  middlewareClientMaxBodySize: '50mb',
   compiler: {
     styledComponents: true,
   },

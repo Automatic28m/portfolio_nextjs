@@ -3,39 +3,50 @@ import { revalidatePath } from "next/cache";
 import { uploadToCloudinary, extractCloudinaryPublicId, deleteFromCloudinary } from "@/lib/cloudinary";
 import * as service from "@/services/portfolioService";
 
-export async function createPortfolioAction(formData) {
+export async function createPortfolioAction(payload) {
     try {
-        const title = formData.get("title");
-        const contents = formData.get("contents");
-        const location = formData.get("location");
-        const date = formData.get("event_date");
-        const type_id = formData.get("type_id");
-        const skillIds = formData.getAll("skill_type_ids"); // Gets array from checkboxes
+        const isFormData = payload?.get && typeof payload.get === 'function';
+        const title = isFormData ? payload.get("title") : payload.title;
+        const contents = isFormData ? payload.get("contents") : payload.contents;
+        const location = isFormData ? payload.get("location") : payload.location;
+        const date = isFormData ? payload.get("event_date") : payload.event_date;
+        const type_id = isFormData ? payload.get("type_id") : payload.type_id;
+        const skillIds = isFormData
+            ? payload.getAll("skill_type_ids")
+            : payload.skill_type_ids || payload.skillIds || [];
 
-        // 1. Upload Thumbnail
-        const thumbFile = formData.get("thumbnail");
-        const thumbnailUrl = await uploadToCloudinary(thumbFile, "portfolio_thumbnails");
-
-        // 2. Upload Gallery Images
-        const galleryFiles = formData.getAll("gallery_images");
-        const galleryUrls = [];
-        for (const file of galleryFiles) {
-            if (file.size > 0) {
-                const url = await uploadToCloudinary(file, "portfolio_galleries");
-                galleryUrls.push(url);
+        let thumbnailUrl = isFormData ? null : payload.thumbnailUrl || payload.thumbnail || null;
+        if (isFormData) {
+            const thumbFile = payload.get("thumbnail");
+            if (thumbFile && thumbFile.size > 0) {
+                thumbnailUrl = await uploadToCloudinary(thumbFile, "portfolio_thumbnails");
             }
         }
 
-        // 3. Database Transaction (Logic from your database.js)
+        let galleryUrls = [];
+        if (isFormData) {
+            const galleryFiles = payload.getAll("gallery_images").filter(
+                (file) => file && file.size > 0
+            );
+            galleryUrls = await Promise.all(
+                galleryFiles.map((file) => uploadToCloudinary(file, "portfolio_galleries"))
+            );
+        } else {
+            galleryUrls = payload.galleryUrls || [];
+        }
+
         await service.createFullPortfolio({
-            title, contents, location, date,
+            title,
+            contents,
+            location,
+            date,
             thumbnail: thumbnailUrl,
             type_id,
             galleryUrls,
-            skillIds
+            skillIds,
         });
 
-        revalidatePath("/admin/portfolio");
+        revalidatePath("/portfolio");
         revalidatePath("/");
         return { success: true };
     } catch (error) {
@@ -77,16 +88,29 @@ export async function updatePortfolioAction(id, formData) {
 
 export async function deletePortfolioAction(id) {
     try {
-        // 1. Fetch details to delete from Cloudinary (Logic from your server.js)
+        // 1. Fetch details to delete from Cloudinary
         const project = await service.getPortfolioById(id);
-        const gallery = await service.getGalleryByPortfolioId(id);
-
-        if (project[0]?.thumbnail) {
-            await deleteFromCloudinary(extractCloudinaryPublicId(project[0].thumbnail));
+        if (!project) {
+            return { success: false, error: "Portfolio not found" };
         }
 
-        for (const item of gallery) {
-            await deleteFromCloudinary(extractCloudinaryPublicId(item.img));
+        if (project.thumbnail) {
+            const publicId = extractCloudinaryPublicId(project.thumbnail);
+            if (publicId) {
+                await deleteFromCloudinary(publicId);
+            }
+        }
+
+        const gallery = await service.getGalleryByPortfolioId(id);
+        if (Array.isArray(gallery) && gallery.length) {
+            await Promise.all(
+                gallery.map(async (item) => {
+                    const galleryPublicId = extractCloudinaryPublicId(item.img);
+                    if (galleryPublicId) {
+                        await deleteFromCloudinary(galleryPublicId);
+                    }
+                })
+            );
         }
 
         // 2. Delete from DB
@@ -96,6 +120,7 @@ export async function deletePortfolioAction(id) {
         revalidatePath("/");
         return { success: true };
     } catch (error) {
+        console.error("Delete Action Error:", error);
         return { success: false, error: error.message };
     }
 }

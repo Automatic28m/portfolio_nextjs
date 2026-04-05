@@ -2,8 +2,7 @@
 
 import { useActionState } from 'react'; // React 19 / Next 15 standard
 import Link from 'next/link';
-import { loginAction } from '@/app/actions/authActions';
-
+import { loginAction } from '@/actions/authActions';
 export default function LoginPage() {
     //prevState holds the {error: ...} object returned by the action
     const [state, formAction, isPending] = useActionState(loginAction, null);
