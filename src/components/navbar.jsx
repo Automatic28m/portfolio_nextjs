@@ -58,13 +58,13 @@ export default function Navbar() {
                         ))}
                     </div>
 
-                    {/* <div className="flex items-center gap-4 z-60">
-                        <Link
+                    <div className="flex lg:hidden items-right gap-4 z-60">
+                        {/* <Link
                             href={username === 'Login' ? '/login' : '/dashboard'}
                             className="hidden lg:block text-surface font-durer text-md uppercase tracking-widest hover:opacity-70 transition-opacity"
                         >
                             {username}
-                        </Link>
+                        </Link> */}
 
                         <button
                             className="lg:hidden text-surface p-2 cursor-pointer"
@@ -83,7 +83,7 @@ export default function Navbar() {
                                 ></span>
                             </div>
                         </button>
-                    </div> */}
+                    </div>
                 </div>
             </nav>
 
