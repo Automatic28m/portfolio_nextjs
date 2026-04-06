@@ -52,13 +52,13 @@ export default async function PortfolioDetailPage({ params }) {
     }
 
     return (
-        <div className="flex flex-col min-h-screen bg-white">
+        <div className="flex flex-col min-h-screen bg-surface">
             <Navbar />
             
-            <main className="flex-grow pt-24 pb-20 px-6">
+            <main className="grow pt-24 pb-20 px-6">
                 <article className="max-w-4xl mx-auto">
                     {dataLoadError && (
-                        <div className="mb-8 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-amber-900">
+                        <div className="mb-8 rounded-lg border border-accent/40 bg-accent/15 px-4 py-3 text-primary">
                             {dataLoadError}
                         </div>
                     )}
@@ -80,18 +80,18 @@ export default async function PortfolioDetailPage({ params }) {
 
                             {/* Content Section */}
                             <FadeInOnView className="space-y-6">
-                                <div className="border-b border-slate-100 pb-6">
-                                    <h1 className="text-4xl md:text-5xl font-bold text-slate-900 font-durer mb-4">
+                                <div className="border-b border-secondary/15 pb-6">
+                                    <h1 className="text-4xl md:text-5xl font-bold text-primary font-durer mb-4">
                                         {project.title}
                                     </h1>
-                                    <div className="flex flex-wrap items-center gap-4 text-sm font-bold text-blue-600 uppercase tracking-widest">
+                                    <div className="flex flex-wrap items-center gap-4 text-sm font-bold text-secondary uppercase tracking-widest">
                                         <span>{project.event_location}</span>
-                                        <span className="text-slate-300">•</span>
+                                        <span className="text-secondary/40">•</span>
                                         <span>{project.event_date}</span>
                                     </div>
                                 </div>
 
-                                <p className="text-lg text-slate-600 leading-relaxed whitespace-pre-line font-subject">
+                                <p className="text-lg text-secondary/90 leading-relaxed whitespace-pre-line font-subject">
                                     {project.contents}
                                 </p>
 
@@ -100,7 +100,7 @@ export default async function PortfolioDetailPage({ params }) {
                                     {skillTypes.map((skill, idx) => (
                                         <span
                                             key={idx}
-                                            className="px-3 py-1 text-xs font-bold rounded-full bg-slate-100 text-slate-600 border border-slate-200"
+                                            className="px-3 py-1 text-xs font-bold rounded-full bg-secondary/10 text-secondary border border-secondary/20"
                                         >
                                             {skill.name}
                                         </span>
@@ -113,8 +113,8 @@ export default async function PortfolioDetailPage({ params }) {
                                 <div className="mt-20">
                                     <FadeInOnView>
                                         <div className="flex items-center gap-4 mb-8">
-                                            <h2 className="text-xl font-bold text-slate-400 uppercase tracking-tighter">Gallery</h2>
-                                            <div className="flex-grow h-[1px] bg-slate-100"></div>
+                                            <h2 className="text-xl font-bold text-secondary/70 uppercase tracking-tighter">Gallery</h2>
+                                            <div className="grow h-px bg-secondary/15"></div>
                                         </div>
                                     </FadeInOnView>
 

@@ -8,8 +8,12 @@
   --font-subject: "fc-subject", sans-serif;
 
   /* Colors */
-  --color-background: #ffffff;
-  --color-foreground: #171717;
+  --color-background: #f3f4f4;
+  --color-foreground: #061e29;
+  --color-primary: #061e29;
+  --color-secondary: #1d546d;
+  --color-accent: #5f9598;
+  --color-surface: #f3f4f4;
 
   /* FIX: Define the background image here with a ROOT path */
   /* This creates the utility class: bg-portfolio-bg */
@@ -52,8 +56,8 @@
   /* Default Dark Mode colors */
   @media (prefers-color-scheme: dark) {
     :root {
-      --color-background: #0a0a0a;
-      --color-foreground: #ededed;
+      --color-background: #061e29;
+      --color-foreground: #f3f4f4;
     }
   }
 }

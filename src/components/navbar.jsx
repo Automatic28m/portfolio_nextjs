@@ -34,10 +34,10 @@ export default function Navbar() {
     ];
 
     return (
-        <header className="bg-white/80 backdrop-blur-md shadow-sm fixed w-full z-50">
+        <header className="bg-surface/85 backdrop-blur-md shadow-sm fixed w-full z-50 border-b border-secondary/10">
             <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
-                    <Link href="/" className="font-durer text-2xl font-bold bg-gradient-to-r from-blue-800 to-blue-500 bg-clip-text text-transparent">
+                    <Link href="/" className="font-durer text-2xl font-bold bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">
                         Phanlop's Portfolio
                     </Link>
 
@@ -47,7 +47,7 @@ export default function Navbar() {
                             <Link
                                 key={item.id}
                                 href={`/#${item.id}`} // Next.js automatically handles the scroll!
-                                className="text-slate-500 hover:text-blue-600 transition-colors"
+                                className="text-secondary hover:text-primary transition-colors"
                             >
                                 {item.name}
                             </Link>
@@ -55,7 +55,7 @@ export default function Navbar() {
                         
                         <Link 
                             href={username === "Login" ? "/login" : "/dashboard"} 
-                            className="bg-blue-50 text-blue-700 px-4 py-2 rounded-full font-bold hover:bg-blue-100 transition"
+                            className="bg-secondary/10 text-secondary px-4 py-2 rounded-full font-bold hover:bg-secondary/20 transition"
                         >
                             {username}
                         </Link>
@@ -64,7 +64,7 @@ export default function Navbar() {
                     {/* Mobile Menu Toggle */}
                     <button 
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        className="lg:hidden p-2 text-gray-600"
+                        className="lg:hidden p-2 text-secondary"
                     >
                         <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -74,20 +74,20 @@ export default function Navbar() {
 
                 {/* Mobile Menu Content */}
                 {isMobileMenuOpen && (
-                    <div className="lg:hidden bg-white border-t border-gray-100 py-4 space-y-2">
+                    <div className="lg:hidden bg-surface border-t border-secondary/10 py-4 space-y-2">
                         {navItems.map((item) => (
                             <Link
                                 key={item.id}
                                 href={`/#${item.id}`}
                                 onClick={() => setIsMobileMenuOpen(false)}
-                                className="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+                                className="block px-4 py-2 text-secondary hover:bg-secondary/10 hover:text-primary"
                             >
                                 {item.name}
                             </Link>
                         ))}
                         <Link 
                             href="/login" 
-                            className="block px-4 py-2 font-bold text-blue-600"
+                            className="block px-4 py-2 font-bold text-secondary"
                             onClick={() => setIsMobileMenuOpen(false)}
                         >
                             {username}

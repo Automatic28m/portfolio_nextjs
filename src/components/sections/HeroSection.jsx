@@ -15,9 +15,6 @@ export default function HeroSection() {
         backgroundImage: "url('/images/bg.jpg')",
       }}
     >
-      {/* Dark Overlay */}
-      <div className="absolute inset-0 " />
-
       {/* Hero Content */}
       <div
         className="relative z-10 flex flex-col-reverse md:flex-row overflow-hidden"
@@ -29,7 +26,7 @@ export default function HeroSection() {
         {/* 1. Image Container - Fixed with 'relative' and specific heights */}
         <FadeInOnView
           duration={0.5}
-          className="relative flex-1 w-full h-[500px] md:h-[auto] min-h-[500px] md:min-h-[700px]"
+          className="relative flex-1 w-full h-125 md:h-auto min-h-125 md:min-h-175"
         >
           <Image
             src="/images/profile2.png"
@@ -44,7 +41,7 @@ export default function HeroSection() {
 
         {/* 2. Content Column */}
         <div className="flex-1 flex flex-col gap-y-6 justify-center px-8 md:px-20 py-12">
-          <div className="bg-gradient-to-r from-blue-900 to-blue-600 bg-clip-text text-transparent">
+          <div className="bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">
             <Typewriter
               text="Hi, I'm Phanlop Boonluea"
               className="text-5xl md:text-7xl font-bold mb-2 font-durer leading-tight"
@@ -54,15 +51,15 @@ export default function HeroSection() {
           <div className="space-y-2">
             <Typewriter
               text="Computer Engineering Student @ RMUTT"
-              className="text-xl md:text-2xl text-slate-600 font-medium font-subject"
+              className="text-xl md:text-2xl text-secondary font-medium font-subject"
             />
-            <p className="text-slate-500 max-w-md">
+            <p className="text-secondary/80 max-w-md">
               I'm a passionate student developer who loves building user-friendly web apps. I'm currently studying at RMUTT University in Thailand.
             </p>
           </div>
 
           {/* Social Links */}
-          <div className="flex gap-8 text-slate-400 mt-6">
+          <div className="flex gap-8 text-secondary/70 mt-6">
             <SocialLink href="mailto:phanlop.auto@gmail.com" icon={<Mail size={26} />} label="Email" />
             <SocialLink href="https://github.com/Automatic28m" icon={<Github size={26} />} label="GitHub" />
             <SocialLink href="https://www.instagram.com/automatic.pb/" icon={<Instagram size={26} />} label="Instagram" />
@@ -79,9 +76,9 @@ function SocialLink({ href, icon, label }) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="group flex flex-col items-center gap-2 hover:text-blue-600 transition-all duration-300 hover:-translate-y-1"
+      className="group flex flex-col items-center gap-2 hover:text-accent transition-all duration-300 hover:-translate-y-1"
     >
-      <div className="p-3 rounded-full bg-white shadow-sm group-hover:shadow-md transition-all border border-slate-100">
+      <div className="p-3 rounded-full bg-surface shadow-sm group-hover:shadow-md transition-all border border-secondary/15">
         {icon}
       </div>
       <span className="text-[10px] font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">

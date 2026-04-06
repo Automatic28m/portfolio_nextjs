@@ -12,8 +12,8 @@ import Image from 'next/image.js';
 
 export default function PortfolioCard({ item, index, skillTypes = [] }) {
     return (
-        <FadeInOnView className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden" key={index}>
-            <div className="flex flex-col h-full">
+        <FadeInOnView className="bg-white rounded-lg shadow-sm border border-secondary/15 overflow-hidden" key={index}>
+            <div className="flex flex-col h-full relative">
                 {/* Image Section (Keep your fixed 'relative' container here) */}
                 <div className="relative aspect-video w-full overflow-hidden">
                     <LightGallery speed={500} plugins={[lgThumbnail, lgZoom]}>
@@ -29,37 +29,41 @@ export default function PortfolioCard({ item, index, skillTypes = [] }) {
                     </LightGallery>
                 </div>
 
-                <div className='p-5'>
-                    <h3 className="font-bold text-xl mb-2">{item.title}</h3>
-                    <p className="text-sm text-slate-600 line-clamp-3 mb-4">{item.contents}</p>
-                    <p className='text-xs font-bold text-blue-600 uppercase tracking-widest'>
-                        {item.event_location} • {item.event_date}
-                    </p>
+                <div className="flex flex-col flex-1 pb-20">
+                    <div className='p-5'>
+                        <h3 className="font-durer font-bold text-2xl mb-2">{item.title}</h3>
+                        <p className="text-sm text-secondary/85 line-clamp-3 mb-4">{item.contents}</p>
 
-                    {/* ✅ Display the props directly */}
-                    <div className="flex flex-wrap gap-2 mt-4">
-                        {skillTypes.map((skill, idx) => {
-                            // Look up the classes based on the color string from DB (e.g., "blue")
-                            const colorClasses = colorMap[skill.color?.toLowerCase()] || colorMap.gray;
+                        <div className="flex flex-wrap gap-2 mt-4">
+                            {skillTypes.map((skill, idx) => {
+                                // Look up the classes based on the color string from DB (e.g., "blue")
+                                const colorClasses = colorMap[skill.color?.toLowerCase()] || colorMap.gray;
 
-                            return (
-                                <span
-                                    key={idx}
-                                    className={`px-2 py-1 text-[10px] font-bold rounded border ${colorClasses}`}
-                                >
-                                    {skill.name}
-                                </span>
-                            );
-                        })}
+                                return (
+                                    <span
+                                        key={idx}
+                                        className={`px-2 py-1 text-[10px] font-bold rounded border ${colorClasses}`}
+                                    >
+                                        {skill.name}
+                                    </span>
+                                );
+                            })}
+                        </div>
                     </div>
                 </div>
 
-                <Link
-                    href={`/portfolio/${item.id}`}
-                    className="flex items-center gap-1 p-5 pt-0 text-sm font-bold text-blue-600 hover:text-blue-800 transition"
-                >
-                    Read more <ArrowUpRight size={16} />
-                </Link>
+                    <div className="flex justify-between p-5 absolute bottom-0 left-0 right-0 bg-white border-t border-secondary/15">
+                        <p className='text-[10px] font-bold text-secondary/60 uppercase tracking-widest'>
+                            {item.event_location} • {item.event_date}
+                        </p>
+                        <Link
+                            href={`/portfolio/${item.id}`}
+                            className="text-right w-fit group mt-auto inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-secondary transition-colors duration-200 hover:text-primary"
+                        >
+                            Read More
+                            <ArrowUpRight size={14} className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                        </Link>
+                    </div>
             </div>
         </FadeInOnView>
     );
