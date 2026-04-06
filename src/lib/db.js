@@ -32,12 +32,14 @@ const getSslConfig = () => {
 };
 
 const pool = () => {
+  const parsedPort = Number(process.env.MYSQL_PORT);
+
   return mysql.createPool({
     host: process.env.MYSQL_HOST,
     user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE,
-    port: parseInt(process.env.MYSQL_PORT) || 18133,
+    port: Number.isFinite(parsedPort) && parsedPort > 0 ? parsedPort : 3306,
     ssl: getSslConfig(),
     waitForConnections: true,
     connectionLimit: 10,
