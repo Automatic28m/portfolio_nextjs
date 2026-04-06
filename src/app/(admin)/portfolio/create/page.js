@@ -3,6 +3,8 @@ import { getSkillTypes, getPortfolioType } from "@/services/portfolioService";
 import CreatePortfolioForm from "./CreatePortfolioForm";
 
 export const maxDuration = 60;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function Page() {
   const [skills, types] = await Promise.all([

@@ -3,6 +3,8 @@ import PortfolioTableClient from "./PortfolioTableClient";
 import Link from "next/link";
 
 export const metadata = { title: "Manage Portfolio | Admin" };
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function ManagePortfolioPage() {
     // Fetch data on the server

@@ -5,6 +5,9 @@ import {
     Building, Laugh, GraduationCap, Image as ImageIcon 
 } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function DashboardPage() {
     // 1. Fetch all data in parallel on the server
     const counts = await getDashboardCounts();

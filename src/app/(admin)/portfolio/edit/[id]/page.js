@@ -7,6 +7,8 @@ import {
 import EditPortfolioForm from "./EditPortfolioForm";
 
 export const metadata = { title: "Edit Portfolio | Admin" };
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function EditPortfolioPage({ params }) {
     const { id } = await params;
