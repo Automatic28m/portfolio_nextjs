@@ -1,7 +1,8 @@
 /* Scroller.css */
 
 .scroller {
-    max-width: 600px;
+    width: 100%;
+    max-width: none;
 }
 
 .scroller__inner {
@@ -13,14 +14,34 @@
 
 .scroller[data-animated="true"] {
     overflow: hidden;
-    -webkit-mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
-    mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
 }
 
 .scroller[data-animated="true"] .scroller__inner {
     width: max-content;
     flex-wrap: nowrap;
     animation: scroll var(--_animation-duration, 40s) var(--_animation-direction, forwards) linear infinite;
+}
+
+.logo-scroller-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.logo-scroller-row {
+    position: relative;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, white 12%, white 88%, transparent);
+    mask-image: linear-gradient(90deg, transparent, white 12%, white 88%, transparent);
+}
+
+.logo-scroller-track {
+    display: flex;
+    width: max-content;
+    gap: 1rem;
+}
+
+.logo-scroller-row[data-paused="true"] .logo-scroller-track {
+    animation-play-state: paused;
 }
 
 .scroller[data-direction="right"] {
@@ -36,6 +57,38 @@
 }
 
 .scroller[data-speed="slow"] {
+    --_animation-duration: 60s;
+}
+
+.text-scroller {
+    width: 100%;
+    max-width: none;
+}
+
+.text-scroller__inner {
+    padding-block: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.text-scroller[data-animated="true"] {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, white 12%, white 88%, transparent);
+    mask-image: linear-gradient(90deg, transparent, white 12%, white 88%, transparent);
+}
+
+.text-scroller[data-animated="true"] .text-scroller__inner {
+    width: max-content;
+    flex-wrap: nowrap;
+    animation: scroll var(--_animation-duration, 40s) linear infinite;
+}
+
+.text-scroller[data-speed="fast"] {
+    --_animation-duration: 20s;
+}
+
+.text-scroller[data-speed="slow"] {
     --_animation-duration: 60s;
 }
 

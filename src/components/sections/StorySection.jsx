@@ -79,12 +79,12 @@ export default function StorySection() {
                         </div>
 
                         {/* Visual Badge/Callout */}
-                        <div className="mt-8 p-4 bg-white rounded-lg border border-secondary/15 shadow-sm inline-flex items-center gap-3 w-fit">
+                        {/* <div className="mt-8 p-4 bg-white rounded-lg border border-secondary/15 shadow-sm inline-flex items-center gap-3 w-fit">
                             <div className="h-2 w-2 rounded-full bg-accent animate-pulse" />
                             <span className="text-xs font-bold uppercase tracking-wider text-secondary/80">
                                 Seeking Internship Opportunities
                             </span>
-                        </div>
+                        </div> */}
                     </div>
 
                 </div>

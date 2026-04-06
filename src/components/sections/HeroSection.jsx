@@ -60,9 +60,9 @@ export default function HeroSection() {
 
           {/* Social Links */}
           <div className="flex gap-8 text-secondary/70 mt-6">
-            <SocialLink href="mailto:phanlop.auto@gmail.com" icon={<Mail size={26} />} label="Email" />
-            <SocialLink href="https://github.com/Automatic28m" icon={<Github size={26} />} label="GitHub" />
-            <SocialLink href="https://www.instagram.com/automatic.pb/" icon={<Instagram size={26} />} label="Instagram" />
+            <SocialLink href="mailto:phanlop.auto@gmail.com" icon={<Mail size={26} />}/>
+            <SocialLink href="https://github.com/Automatic28m" icon={<Github size={26} />} />
+            <SocialLink href="https://www.instagram.com/automatic.pb/" icon={<Instagram size={26} />} />
           </div>
         </div>
       </div>
@@ -81,9 +81,6 @@ function SocialLink({ href, icon, label }) {
       <div className="p-3 rounded-full bg-surface shadow-sm group-hover:shadow-md transition-all border border-secondary/15">
         {icon}
       </div>
-      <span className="text-[10px] font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
-        {label}
-      </span>
     </a>
   );
 }

@@ -9,8 +9,7 @@ import {
 // UI Components
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
-import TextScrollerComponent from "@/components/textScrollerComponent";
-import LogoScrollerComponent from "@/components/logoScrollerComponent copy";
+import LogoScrollerComponent from "@/components/logoScrollerComponent";
 import PortfolioCard from "@/components/portfolioCard";
 import FadeInOnView from "@/components/animations/fadeInOnView";
 import BackgroundImageSection from "@/components/BackgroundImageSection";
@@ -71,7 +70,6 @@ export default async function PortfolioPage() {
 				)}
 
 				<HeroSection />
-				<TextScrollerComponent className="bg-surface border-y border-secondary/15" />
 				{/* <AboutSection /> */}
 				<StorySection />
 
@@ -80,19 +78,13 @@ export default async function PortfolioPage() {
 					id="skills"
 					imageSrc="/images/bg.jpg"
 					imageAlt="Skills Background"
-					className="px-6 py-20 min-h-screen w-full"
+					className="px-6 py-20 w-full"
 					overlayOpacity="bg-primary/35"
 				>
-					<div className="max-w-3xl mx-auto">
-						<h2 className="text-3xl font-semibold mb-12 font-durer text-center text-white">Tech Stacks</h2>
-						<div className="grid grid-cols-2 sm:grid-cols-3 gap-6 max-w-xl mx-auto">
-							{skills.map((item, index) => (
-								<span key={index} className="bg-white/90 backdrop-blur-sm p-5 rounded-xl shadow-sm border border-white/20 text-center font-medium text-primary hover:text-secondary hover:bg-white hover:border-accent transition-all duration-300">
-									{item.title}
-								</span>
-							))}
-						</div>
-						<div className="mt-16">
+					<div className="max-w-5xl mx-auto text-white">
+						<h2 className="text-6xl font-durer font-semibold text-left mb-3 text-primary">Tech Stacks</h2>
+						<p className="text-lg text-secondary/80 mb-12 text-left">The tools, apps, devices, and libraries I use to build, design, and ship.</p>
+						<div className="mt-12 ">
 							<LogoScrollerComponent items={skills} />
 						</div>
 					</div>
@@ -174,70 +166,70 @@ export default async function PortfolioPage() {
 
 						<div className="space-y-10 md:space-y-14">
 							{educations.map((item, index) => {
-							const year = item.event_date ? new Date(item.event_date).getFullYear() : 'N/A';
-							const isLeft = index % 2 === 0;
+								const year = item.event_date ? new Date(item.event_date).getFullYear() : 'N/A';
+								const isLeft = index % 2 === 0;
 
-							return (
-								<FadeInOnView key={item.id ?? index}>
-									<div className="relative grid grid-cols-[2.5rem_1fr] items-start gap-4 md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-6">
+								return (
+									<FadeInOnView key={item.id ?? index}>
+										<div className="relative grid grid-cols-[2.5rem_1fr] items-start gap-4 md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-6">
 
-										{isLeft ? (
-											<>
-												<div className="relative col-start-2 row-start-1 w-full rounded-2xl border border-secondary/15 bg-white p-6 shadow-sm md:col-start-1 md:justify-self-end md:mr-8 md:w-full max-w-md md:pr-10">
-													<div className="absolute top-1/2 hidden h-4 w-4 -right-2 -translate-y-1/2 rotate-45 border border-secondary/15 border-l-0 border-b-0 bg-white md:block" />
-													<div className="flex items-start justify-between gap-4">
-														<div className="min-w-0">
-															<h3 className="text-xl font-bold text-primary">{item.title}</h3>
-															<p className="mt-1 text-sm text-secondary/70">
-																{item.event_location || ''}
-															</p>
+											{isLeft ? (
+												<>
+													<div className="relative col-start-2 row-start-1 w-full rounded-2xl border border-secondary/15 bg-white p-6 shadow-sm md:col-start-1 md:justify-self-end md:mr-8 md:w-full max-w-md md:pr-10">
+														<div className="absolute top-1/2 hidden h-4 w-4 -right-2 -translate-y-1/2 rotate-45 border border-secondary/15 border-l-0 border-b-0 bg-white md:block" />
+														<div className="flex items-start justify-between gap-4">
+															<div className="min-w-0">
+																<h3 className="text-xl font-bold text-primary">{item.title}</h3>
+																<p className="mt-1 text-sm text-secondary/70">
+																	{item.event_location || ''}
+																</p>
+															</div>
+															<span className="inline-flex shrink-0 rounded-full bg-secondary/10 px-3 py-1 text-xs font-bold uppercase tracking-widest text-secondary">
+																{year}
+															</span>
 														</div>
-														<span className="inline-flex shrink-0 rounded-full bg-secondary/10 px-3 py-1 text-xs font-bold uppercase tracking-widest text-secondary">
-															{year}
-														</span>
+														<p className="mt-4 text-secondary leading-relaxed">
+															{item.contents}
+														</p>
 													</div>
-													<p className="mt-4 text-secondary leading-relaxed">
-														{item.contents}
-													</p>
-												</div>
 
-												<div className="relative z-10 col-start-1 row-start-1 flex justify-center md:col-start-2">
-													<div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-md ring-8 ring-surface/80">
-														<GraduationCap size={14} className="text-primary" />
-													</div>
-												</div>
-											</>
-										) : (
-											<>
-												<div className="relative z-10 col-start-1 row-start-1 flex justify-center md:col-start-2">
-													<div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-md ring-8 ring-surface/80">
-														<GraduationCap size={14} className="text-primary" />
-													</div>
-												</div>
-
-												<div className="relative col-start-2 row-start-1 w-full rounded-2xl border border-secondary/15 bg-white p-6 shadow-sm md:col-start-3 md:justify-self-start md:ml-8 md:w-full max-w-md md:pl-10">
-													<div className="absolute top-1/2 hidden h-4 w-4 -left-2 -translate-y-1/2 rotate-45 border border-secondary/15 border-r-0 border-t-0 bg-white md:block" />
-													<div className="flex items-start justify-between gap-4">
-														<div className="min-w-0">
-															<h3 className="text-xl font-bold text-primary">{item.title}</h3>
-															<p className="mt-1 text-sm text-secondary/70">
-																{item.event_location || ''}
-															</p>
+													<div className="relative z-10 col-start-1 row-start-1 flex justify-center md:col-start-2">
+														<div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-md ring-8 ring-surface/80">
+															<GraduationCap size={14} className="text-primary" />
 														</div>
-														<span className="inline-flex shrink-0 rounded-full bg-secondary/10 px-3 py-1 text-xs font-bold uppercase tracking-widest text-secondary">
-															{year}
-														</span>
 													</div>
-													<p className="mt-4 text-secondary leading-relaxed">
-														{item.contents}
-													</p>
-												</div>
-											</>
+												</>
+											) : (
+												<>
+													<div className="relative z-10 col-start-1 row-start-1 flex justify-center md:col-start-2">
+														<div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-md ring-8 ring-surface/80">
+															<GraduationCap size={14} className="text-primary" />
+														</div>
+													</div>
 
-										)}
-									</div>
-								</FadeInOnView>
-							);
+													<div className="relative col-start-2 row-start-1 w-full rounded-2xl border border-secondary/15 bg-white p-6 shadow-sm md:col-start-3 md:justify-self-start md:ml-8 md:w-full max-w-md md:pl-10">
+														<div className="absolute top-1/2 hidden h-4 w-4 -left-2 -translate-y-1/2 rotate-45 border border-secondary/15 border-r-0 border-t-0 bg-white md:block" />
+														<div className="flex items-start justify-between gap-4">
+															<div className="min-w-0">
+																<h3 className="text-xl font-bold text-primary">{item.title}</h3>
+																<p className="mt-1 text-sm text-secondary/70">
+																	{item.event_location || ''}
+																</p>
+															</div>
+															<span className="inline-flex shrink-0 rounded-full bg-secondary/10 px-3 py-1 text-xs font-bold uppercase tracking-widest text-secondary">
+																{year}
+															</span>
+														</div>
+														<p className="mt-4 text-secondary leading-relaxed">
+															{item.contents}
+														</p>
+													</div>
+												</>
+
+											)}
+										</div>
+									</FadeInOnView>
+								);
 							})}
 						</div>
 					</div>
