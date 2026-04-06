@@ -26,27 +26,48 @@ export const metadata = {
 };
 
 export default async function PortfolioPage() {
-  const [
-    skills,
-    projects,
-    achievements,
-    internships,
-    activities,
-    educations
-  ] = await Promise.all([
-    getSkills(),
-    getProjects(),
-    getAchievements(),
-    getInternships(),
-    getActivities(),
-    getEducations()
-  ]);
+  let skills = [];
+  let projects = [];
+  let achievements = [];
+  let internships = [];
+  let activities = [];
+  let educations = [];
+  let dataLoadError = null;
+
+  try {
+    [
+      skills,
+      projects,
+      achievements,
+      internships,
+      activities,
+      educations
+    ] = await Promise.all([
+      getSkills(),
+      getProjects(),
+      getAchievements(),
+      getInternships(),
+      getActivities(),
+      getEducations()
+    ]);
+  } catch (error) {
+    dataLoadError = "Portfolio data is temporarily unavailable. Please try again shortly.";
+    console.error("Home page DB error:", error);
+  }
 
   return (
     <div className="flex flex-col min-h-screen font-subject">
       <Navbar />
 
       <main className="pt-16 min-h-screen bg-white text-gray-800">
+
+        {dataLoadError && (
+          <section className="px-6 pt-6">
+            <div className="max-w-5xl mx-auto rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-amber-900">
+              {dataLoadError}
+            </div>
+          </section>
+        )}
 
         <HeroSection />
         <TextScrollerComponent className="bg-slate-50 border-y border-slate-100" />

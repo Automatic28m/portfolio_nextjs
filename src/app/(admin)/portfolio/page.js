@@ -7,8 +7,15 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export default async function ManagePortfolioPage() {
-    // Fetch data on the server
-    const data = await getPortfolioWithCounts();
+    let data = [];
+    let loadError = null;
+
+    try {
+        data = await getPortfolioWithCounts();
+    } catch (error) {
+        loadError = "Unable to load portfolio records right now.";
+        console.error("ManagePortfolioPage DB error:", error);
+    }
 
     return (
         <div className="space-y-6">
@@ -18,6 +25,12 @@ export default async function ManagePortfolioPage() {
                     + Add New Item
                 </Link>
             </div>
+
+            {loadError && (
+                <div className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-amber-900">
+                    {loadError}
+                </div>
+            )}
             
             <PortfolioTableClient initialData={data} />
         </div>

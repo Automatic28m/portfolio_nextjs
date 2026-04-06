@@ -6,8 +6,12 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export default async function TagsPage() {
-    // Fetch data on the server
-    const skillTypes = await getSkillTypes();
+    let skillTypes = [];
+    try {
+        skillTypes = await getSkillTypes();
+    } catch (error) {
+        console.error("TagsPage DB error:", error);
+    }
 
     return <ManageTags initialTags={skillTypes} />;
 }
