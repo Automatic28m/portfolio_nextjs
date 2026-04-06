@@ -8,12 +8,14 @@ const globalForMysql = global;
 const getSslConfig = () => {
   const certPath = path.join(process.cwd(), 'src/certs/ca.pem');
   const caFromEnv = process.env.MYSQL_CA_CERT || process.env.MYSQL_SSL_CA;
+  const sslMode = (process.env.MYSQL_SSL_MODE || '').toLowerCase();
+  const strictVerify = sslMode === 'strict';
 
   // Preferred for CI/CD: set cert text in env and preserve line breaks.
   if (caFromEnv) {
     return {
       ca: caFromEnv.replace(/\\n/g, '\n'),
-      rejectUnauthorized: true,
+      rejectUnauthorized: strictVerify,
     };
   }
 
@@ -21,6 +23,7 @@ const getSslConfig = () => {
   if (fs.existsSync(certPath)) {
     return {
       ca: fs.readFileSync(certPath, 'utf8'),
+      rejectUnauthorized: strictVerify,
     };
   }
 
