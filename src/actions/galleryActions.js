@@ -4,9 +4,31 @@ import { revalidatePath } from "next/cache";
 import { uploadToCloudinary, extractCloudinaryPublicId, deleteFromCloudinary } from "@/lib/cloudinary";
 import * as service from "@/services/galleryService";
 
+const MAX_FILE_BYTES = 5 * 1024 * 1024;
+const MAX_TOTAL_BYTES = 5.5 * 1024 * 1024;
+
 export async function uploadGalleryImagesAction(portfolioId, formData) {
     try {
-        const files = formData.getAll("gallery_images");
+        const files = formData
+            .getAll("gallery_images")
+            .filter((file) => file && file.size > 0);
+
+        const oversizedFile = files.find((file) => file.size > MAX_FILE_BYTES);
+        if (oversizedFile) {
+            return {
+                success: false,
+                error: `\"${oversizedFile.name}\" exceeds 5MB. Please compress it and try again.`,
+            };
+        }
+
+        const totalBytes = files.reduce((sum, file) => sum + file.size, 0);
+        if (totalBytes > MAX_TOTAL_BYTES) {
+            return {
+                success: false,
+                error: "Total upload payload is too large for Netlify (max ~5.5MB). Upload fewer images at once.",
+            };
+        }
+
         const urls = [];
 
         for (const file of files) {

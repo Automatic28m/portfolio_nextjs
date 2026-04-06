@@ -7,6 +7,9 @@ import { toast, Toaster } from "react-hot-toast";
 import { Search, Trash2, Upload } from "lucide-react";
 import { deleteGalleryImageAction, uploadGalleryImagesAction } from "@/actions/galleryActions";
 
+const MAX_FILE_BYTES = 5 * 1024 * 1024;
+const MAX_TOTAL_BYTES = 5.5 * 1024 * 1024;
+
 export default function GalleryTableClient({ portfolioId, initialGallery }) {
     const [gallery, setGallery] = useState(initialGallery || []);
     const [filterText, setFilterText] = useState("");
@@ -91,6 +94,19 @@ export default function GalleryTableClient({ portfolioId, initialGallery }) {
 
         if (!imageUpload?.files?.length) {
             toast.error("Please select at least one image.");
+            return;
+        }
+
+        const selectedFiles = Array.from(imageUpload.files);
+        const oversized = selectedFiles.find((file) => file.size > MAX_FILE_BYTES);
+        if (oversized) {
+            toast.error(`\"${oversized.name}\" exceeds 5MB. Please compress it first.`);
+            return;
+        }
+
+        const totalBytes = selectedFiles.reduce((sum, file) => sum + file.size, 0);
+        if (totalBytes > MAX_TOTAL_BYTES) {
+            toast.error("Total payload is too large for Netlify (~5.5MB max). Upload fewer images.");
             return;
         }
 

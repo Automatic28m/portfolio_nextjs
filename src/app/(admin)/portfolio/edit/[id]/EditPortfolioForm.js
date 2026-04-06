@@ -9,6 +9,8 @@ import Image from "next/image";
 import { updatePortfolioAction } from "@/actions/portfolioActions";
 import { colorMap } from "@/utils/colors";
 
+const MAX_FILE_BYTES = 5 * 1024 * 1024;
+
 export default function EditPortfolioForm({
     id,
     initialPortfolio,
@@ -55,6 +57,9 @@ export default function EditPortfolioForm({
 
             const fileInput = event.currentTarget.elements.namedItem("thumbnail");
             if (fileInput?.files?.[0]) {
+                if (fileInput.files[0].size > MAX_FILE_BYTES) {
+                    throw new Error("Thumbnail exceeds 5MB. Please compress the image and try again.");
+                }
                 formData.append("thumbnail", fileInput.files[0]);
             }
 

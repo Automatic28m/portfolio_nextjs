@@ -7,11 +7,13 @@ const globalForMysql = global;
 
 const getSslConfig = () => {
   const certPath = path.join(process.cwd(), 'src/certs/ca.pem');
+  const caFromEnv = process.env.MYSQL_CA_CERT || process.env.MYSQL_SSL_CA;
 
   // Preferred for CI/CD: set cert text in env and preserve line breaks.
-  if (process.env.MYSQL_SSL_CA) {
+  if (caFromEnv) {
     return {
-      ca: process.env.MYSQL_SSL_CA.replace(/\\n/g, '\n'),
+      ca: caFromEnv.replace(/\\n/g, '\n'),
+      rejectUnauthorized: true,
     };
   }
 

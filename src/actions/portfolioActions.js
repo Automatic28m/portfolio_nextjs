@@ -3,6 +3,8 @@ import { revalidatePath } from "next/cache";
 import { uploadToCloudinary, extractCloudinaryPublicId, deleteFromCloudinary } from "@/lib/cloudinary";
 import * as service from "@/services/portfolioService";
 
+const MAX_FILE_BYTES = 5 * 1024 * 1024;
+
 export async function createPortfolioAction(payload) {
     try {
         const isFormData = payload?.get && typeof payload.get === 'function';
@@ -74,6 +76,12 @@ export async function updatePortfolioAction(id, formData) {
         const newThumb = formData.get("thumbnail");
         let thumbnailUrl = null;
         if (newThumb && newThumb.size > 0) {
+            if (newThumb.size > MAX_FILE_BYTES) {
+                return {
+                    success: false,
+                    error: "Thumbnail exceeds 5MB. Please compress the image and try again.",
+                };
+            }
             newThumbnailUrl = await uploadToCloudinary(newThumb, "portfolio_thumbnails");
             thumbnailUrl = newThumbnailUrl;
         }
