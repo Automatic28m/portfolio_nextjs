@@ -13,6 +13,7 @@ import TextScrollerComponent from "@/components/textScrollerComponent";
 import LogoScrollerComponent from "@/components/logoScrollerComponent copy";
 import PortfolioCard from "@/components/portfolioCard";
 import FadeInOnView from "@/components/animations/fadeInOnView";
+import BackgroundImageSection from "@/components/BackgroundImageSection";
 
 // Sections
 import HeroSection from "@/components/sections/HeroSection";
@@ -52,13 +53,19 @@ export default async function PortfolioPage() {
         {/* <AboutSection /> */}
         <StorySection />
 
-        {/* Skills Section - Cleaned Background */}
-        <section id="skills" className="px-6 py-20 bg-slate-50">
+        {/* Skills Section - With Background Image */}
+        <BackgroundImageSection 
+          id="skills"
+          imageSrc="/images/bg.jpg"
+          imageAlt="Skills Background"
+          className="px-6 py-20 min-h-screen w-full"
+          overlayOpacity="bg-black/30"
+        >
           <div className="max-w-3xl mx-auto">
-            <h2 className="text-3xl font-semibold mb-12 font-durer text-center">Tech Stacks</h2>
+            <h2 className="text-3xl font-semibold mb-12 font-durer text-center text-white">Tech Stacks</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 max-w-xl mx-auto">
               {skills.map((item, index) => (
-                <span key={index} className="bg-white p-5 rounded-xl shadow-sm border border-slate-100 text-center font-medium hover:text-blue-600 hover:border-blue-200 transition-all duration-300">
+                <span key={index} className="bg-white/90 backdrop-blur-sm p-5 rounded-xl shadow-sm border border-white/20 text-center font-medium text-slate-900 hover:text-blue-600 hover:bg-white hover:border-blue-200 transition-all duration-300">
                   {item.title}
                 </span>
               ))}
@@ -67,13 +74,67 @@ export default async function PortfolioPage() {
               <LogoScrollerComponent />
             </div>
           </div>
-        </section>
+        </BackgroundImageSection>
 
-        {/* Reusable Portfolio Sections */}
+        {/* Projects Section */}
         <PortfolioSection title="Projects" id="projects" data={projects} />
-        <PortfolioSection title="Achievements" id="achievements" data={achievements} bgGray />
+
+        {/* Achievements Section - With Background Image */}
+        <BackgroundImageSection 
+          id="achievements"
+          imageSrc="/images/bg.jpg"
+          imageAlt="Achievements Background"
+          className="px-6 py-20 w-full"
+          overlayOpacity="bg-black/30"
+        >
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-durer font-semibold text-center mb-12 text-white">Achievements</h2>
+            <div className="grid gap-8 md:grid-cols-2">
+              {await Promise.all(achievements.map(async (item, index) => {
+                const { getSkillTypesByPortfolioId } = await import("@/services/portfolioService");
+                const skillTypes = await getSkillTypesByPortfolioId(item.id);
+                return (
+                  <PortfolioCard
+                    item={item}
+                    index={index}
+                    key={item.id}
+                    skillTypes={skillTypes}
+                  />
+                );
+              }))}
+            </div>
+          </div>
+        </BackgroundImageSection>
+
+        {/* Internship Experiences Section */}
         <PortfolioSection title="Internship Experiences" id="internships" data={internships} />
-        <PortfolioSection title="Academic Activities" id="activities" data={activities} bgGray />
+
+        {/* Academic Activities Section - With Background Image */}
+        <BackgroundImageSection 
+          id="activities"
+          imageSrc="/images/bg.jpg"
+          imageAlt="Activities Background"
+          className="px-6 py-20 w-full"
+          overlayOpacity="bg-black/30"
+        >
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-durer font-semibold text-center mb-12 text-white">Academic Activities</h2>
+            <div className="grid gap-8 md:grid-cols-2">
+              {await Promise.all(activities.map(async (item, index) => {
+                const { getSkillTypesByPortfolioId } = await import("@/services/portfolioService");
+                const skillTypes = await getSkillTypesByPortfolioId(item.id);
+                return (
+                  <PortfolioCard
+                    item={item}
+                    index={index}
+                    key={item.id}
+                    skillTypes={skillTypes}
+                  />
+                );
+              }))}
+            </div>
+          </div>
+        </BackgroundImageSection>
 
         {/* Education Section */}
         <section id="education" className="px-6 py-20 bg-white">
@@ -101,13 +162,12 @@ export default async function PortfolioPage() {
   );
 }
 
-async function PortfolioSection({ title, id, data, bgGray = false }) {
+async function PortfolioSection({ title, id, data }) {
   return (
-    <section id={id} className={`px-6 py-20 ${bgGray ? 'bg-slate-50' : 'bg-white'}`}>
+    <section id={id} className="px-6 py-20 bg-white">
       <div className="max-w-5xl mx-auto">
         <h2 className="text-3xl font-durer font-semibold text-center mb-12">{title}</h2>
         <div className="grid gap-8 md:grid-cols-2">
-          {/* 2. Map through data and fetch skills for each item */}
           {await Promise.all(data.map(async (item, index) => {
             const { getSkillTypesByPortfolioId } = await import("@/services/portfolioService");
             const skillTypes = await getSkillTypesByPortfolioId(item.id);
@@ -117,7 +177,7 @@ async function PortfolioSection({ title, id, data, bgGray = false }) {
                 item={item}
                 index={index}
                 key={item.id}
-                skillTypes={skillTypes} // Pass as props
+                skillTypes={skillTypes}
               />
             );
           }))}

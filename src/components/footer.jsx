@@ -1,7 +1,7 @@
 'use client';
 
 import FadeInOnView from "./animations/fadeInOnView";
-import { Mail, Camera, FolderGit2 } from "lucide-react";
+import { Mail, Github, Instagram } from "lucide-react";
 
 export default function Footer() {
     return (
@@ -12,8 +12,8 @@ export default function Footer() {
 
                 <div className="flex justify-center gap-8 mb-12">
                     <SocialLink href="mailto:phanlop.auto@gmail.com" icon={<Mail size={24} />} />
-                    <SocialLink href="https://FolderGit2.com/Automatic28m" icon={<FolderGit2 size={24} />} />
-                    <SocialLink href="https://www.Camera.com/automatic.pb/" icon={<Camera size={24} />} />
+                    <SocialLink href="https://github.com/Automatic28m" icon={<Github size={24} />} />
+                    <SocialLink href="https://www.instagram.com/automatic.pb/" icon={<Instagram size={24} />} />
                 </div>
 
                 <div className="border-t border-slate-800 pt-8 text-sm text-slate-500">
