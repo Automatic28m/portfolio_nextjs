@@ -1,100 +1,115 @@
 'use client';
-
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useEffect, useState } from "react";
 import { jwtDecode } from 'jwt-decode';
-import { usePathname } from 'next/navigation';
 
 export default function Navbar() {
-    const pathname = usePathname();
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [username, setUsername] = useState("Login");
-
-    // We still use useEffect for now if you haven't moved to Cookies yet.
-    // Once you finish Phase 4, we will pass 'username' as a prop from layout.js
-    useEffect(() => {
-        const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    const [isOpen, setIsOpen] = useState(false);
+    const [username, setUsername] = useState(() => {
+        if (typeof window === 'undefined') return 'Login';
+        const token = localStorage.getItem('token');
         if (token) {
             try {
                 const decoded = jwtDecode(token);
-                if (decoded.username) setUsername(decoded.username);
+                return decoded.username || 'Login';
             } catch (error) {
                 console.error('Invalid token', error);
             }
         }
-    }, []);
+        return 'Login';
+    });
+
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+    }, [isOpen]);
 
     const navItems = [
-        { name: "Home", id: "hero" }, // Link to top
-        { name: "About", id: "about" },
-        { name: "Skills", id: "skills" },
-        { name: "Projects", id: "projects" },
-        { name: "Achievements", id: "achievements" },
-        { name: "Contact", id: "contact" }
+        { id: 'hero', name: 'Home', link: '/#hero' },
+        { id: 'skills', name: 'Skills', link: '/#skills' },
+        { id: 'projects', name: 'Projects', link: '/#projects' },
+        { id: 'achievements', name: 'Achievements', link: '/#achievements' },
+        { id: 'educations', name: 'Educations', link: '/#educations' },
     ];
 
     return (
-        <header className="bg-surface/85 backdrop-blur-md shadow-sm fixed w-full z-50 border-b border-secondary/10">
-            <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between items-center h-16">
-                    <Link href="/" className="font-durer text-2xl font-bold bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">
-                        Phanlop's Portfolio
+        <>
+            <nav className="fixed top-0 left-0 w-full h-16 z-50 flex items-center border-b border-secondary/20 bg-primary/80 backdrop-blur-md">
+                <div className="max-w-7xl mx-auto px-6 w-full flex items-center justify-between">
+                    <Link href="/" className="z-60 flex items-center gap-2">
+                        <span className="font-durer text-2xl font-bold text-surface uppercase">
+                            Phanlop's Portfolio
+                        </span>
                     </Link>
 
                     {/* Desktop Menu */}
-                    <div className="hidden lg:flex items-center space-x-6 text-sm font-medium">
+                    <div className="hidden lg:flex items-center gap-12">
                         {navItems.map((item) => (
                             <Link
                                 key={item.id}
-                                href={`/#${item.id}`} // Next.js automatically handles the scroll!
-                                className="text-secondary hover:text-primary transition-colors"
+                                href={item.link}
+                                className="text-surface font-durer text-md uppercase tracking-widest hover:opacity-70 transition-opacity"
                             >
                                 {item.name}
                             </Link>
                         ))}
-                        
-                        <Link 
-                            href={username === "Login" ? "/login" : "/dashboard"} 
-                            className="bg-secondary/10 text-secondary px-4 py-2 rounded-full font-bold hover:bg-secondary/20 transition"
+                    </div>
+
+                    {/* <div className="flex items-center gap-4 z-60">
+                        <Link
+                            href={username === 'Login' ? '/login' : '/dashboard'}
+                            className="hidden lg:block text-surface font-durer text-md uppercase tracking-widest hover:opacity-70 transition-opacity"
                         >
                             {username}
                         </Link>
-                    </div>
 
-                    {/* Mobile Menu Toggle */}
-                    <button 
-                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        className="lg:hidden p-2 text-secondary"
-                    >
-                        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                    </button>
+                        <button
+                            className="lg:hidden text-surface p-2 cursor-pointer"
+                            onClick={() => setIsOpen(!isOpen)}
+                            aria-label="Toggle Menu"
+                        >
+                            <div className="w-6 h-5 relative flex flex-col justify-between">
+                                <span
+                                    className={`w-full h-0.5 bg-surface transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-2' : ''}`}
+                                ></span>
+                                <span
+                                    className={`w-full h-0.5 bg-surface transition-all duration-300 ${isOpen ? 'opacity-0' : ''}`}
+                                ></span>
+                                <span
+                                    className={`w-full h-0.5 bg-surface transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-2.5' : ''}`}
+                                ></span>
+                            </div>
+                        </button>
+                    </div> */}
                 </div>
-
-                {/* Mobile Menu Content */}
-                {isMobileMenuOpen && (
-                    <div className="lg:hidden bg-surface border-t border-secondary/10 py-4 space-y-2">
-                        {navItems.map((item) => (
-                            <Link
-                                key={item.id}
-                                href={`/#${item.id}`}
-                                onClick={() => setIsMobileMenuOpen(false)}
-                                className="block px-4 py-2 text-secondary hover:bg-secondary/10 hover:text-primary"
-                            >
-                                {item.name}
-                            </Link>
-                        ))}
-                        <Link 
-                            href="/login" 
-                            className="block px-4 py-2 font-bold text-secondary"
-                            onClick={() => setIsMobileMenuOpen(false)}
-                        >
-                            {username}
-                        </Link>
-                    </div>
-                )}
             </nav>
-        </header>
+
+            {/* Mobile Menu */}
+            <div
+                className={`fixed inset-0 bg-primary/50 backdrop-blur-xl flex flex-col items-left justify-center gap-10 transition-all duration-500 lg:hidden z-40 px-6
+        ${isOpen ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'}`}
+            >
+                {navItems.map((item) => (
+                    <Link
+                        key={item.id}
+                        href={item.link}
+                        onClick={() => setIsOpen(false)}
+                        className="text-surface font-durer text-3xl uppercase tracking-widest hover:opacity-70 transition-opacity"
+                    >
+                        {item.name}
+                    </Link>
+                ))}
+                {/* <Link
+                    href={username === 'Login' ? '/login' : '/dashboard'}
+                    onClick={() => setIsOpen(false)}
+                    className="text-surface text-durer text-3xl uppercase tracking-widest hover:opacity-70 transition-opacity"
+                >
+                    {username}
+                </Link> */}
+            </div>
+        </>
     );
 }

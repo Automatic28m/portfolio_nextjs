@@ -153,7 +153,7 @@ export default async function PortfolioPage() {
 				</BackgroundImageSection>
 
 				{/* Education Section */}
-				<section id="education" className="px-6 py-20 bg-surface">
+				<section id="educations" className="px-6 py-20 bg-surface">
 					<FadeInOnView>
 						<h2 className="text-3xl font-durer font-semibold text-center mb-2 text-primary">Education</h2>
 						<p className="text-center text-secondary/80 mb-14 max-w-2xl mx-auto">
