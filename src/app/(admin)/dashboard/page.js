@@ -9,8 +9,15 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export default async function DashboardPage() {
-    // 1. Fetch all data in parallel on the server
-    const counts = await getDashboardCounts();
+    let counts = {};
+    let loadError = null;
+
+    try {
+        counts = await getDashboardCounts();
+    } catch (error) {
+        loadError = "Dashboard data is temporarily unavailable. Please check database connection settings.";
+        console.error("DashboardPage DB error:", error);
+    }
     
     // Mapping our IDs from the database to the UI
     const stats = [
@@ -29,6 +36,12 @@ export default async function DashboardPage() {
                 <h1 className="text-3xl font-bold font-durer text-slate-900">Admin Dashboard</h1>
                 <p className="text-slate-700">Welcome back, Phanlop! Here is your portfolio at a glance.</p>
             </div>
+
+            {loadError && (
+                <div className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-amber-900">
+                    {loadError}
+                </div>
+            )}
 
             {/* Main Stats Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
