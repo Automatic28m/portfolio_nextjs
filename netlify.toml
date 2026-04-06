@@ -1,5 +1,4 @@
 [build]
-  base = "portfolio_nextjs"
   command = "npm run build"
 
 [[plugins]]
