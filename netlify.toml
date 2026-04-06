@@ -1,5 +1,5 @@
 [build]
-  base = "phanlop-portfolio-nextjs"
+  base = "portfolio_nextjs"
   command = "npm run build"
 
 [[plugins]]
