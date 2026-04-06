@@ -1,5 +1,5 @@
 [build]
-  base = "air_monitor_iot"
+  base = "phanlop-portfolio-nextjs"
   command = "npm run build"
 
 [[plugins]]
