@@ -56,11 +56,17 @@ export async function createPortfolioAction(payload) {
 }
 
 export async function updatePortfolioAction(id, formData) {
+    let newThumbnailUrl = null;
     try {
+        const existingProject = await service.getPortfolioById(id);
+        if (!existingProject) {
+            return { success: false, error: "Portfolio not found" };
+        }
+
         const title = formData.get("title");
         const contents = formData.get("contents");
         const location = formData.get("location");
-        const date = formData.get("event_date");
+        const date = formData.get("event_date") || null;
         const type_id = formData.get("type_id");
         const skillIds = formData.getAll("skill_type_ids");
 
@@ -68,7 +74,8 @@ export async function updatePortfolioAction(id, formData) {
         const newThumb = formData.get("thumbnail");
         let thumbnailUrl = null;
         if (newThumb && newThumb.size > 0) {
-            thumbnailUrl = await uploadToCloudinary(newThumb, "portfolio_thumbnails");
+            newThumbnailUrl = await uploadToCloudinary(newThumb, "portfolio_thumbnails");
+            thumbnailUrl = newThumbnailUrl;
         }
 
         // Database Update Logic
@@ -78,10 +85,36 @@ export async function updatePortfolioAction(id, formData) {
             skillIds
         });
 
+        // When replacing thumbnail, delete old image from Cloudinary.
+        if (newThumbnailUrl && existingProject.thumbnail) {
+            const oldPublicId = extractCloudinaryPublicId(existingProject.thumbnail);
+            const newPublicId = extractCloudinaryPublicId(newThumbnailUrl);
+
+            if (oldPublicId && oldPublicId !== newPublicId) {
+                try {
+                    await deleteFromCloudinary(oldPublicId);
+                } catch (cleanupError) {
+                    console.error("Old thumbnail cleanup error:", cleanupError);
+                }
+            }
+        }
+
         revalidatePath(`/portfolio/${id}`);
         revalidatePath("/admin/portfolio");
         return { success: true };
     } catch (error) {
+        // Roll back newly uploaded thumbnail if DB update fails.
+        if (newThumbnailUrl) {
+            const newPublicId = extractCloudinaryPublicId(newThumbnailUrl);
+            if (newPublicId) {
+                try {
+                    await deleteFromCloudinary(newPublicId);
+                } catch (rollbackError) {
+                    console.error("New thumbnail rollback cleanup error:", rollbackError);
+                }
+            }
+        }
+
         return { success: false, error: error.message };
     }
 }

@@ -24,6 +24,23 @@ export async function getPortfolioById(id) {
     return rows.length ? { ...rows[0], event_date: formatDate(rows[0].event_date) } : null;
 }
 
+export async function getPortfolioByIdForEdit(id) {
+    const [rows] = await db.query("SELECT * FROM portfolio WHERE id = ?", [id]);
+    if (!rows.length) return null;
+
+    const portfolio = rows[0];
+    let eventDate = null;
+    if (portfolio.event_date) {
+        const d = new Date(portfolio.event_date);
+        eventDate = Number.isNaN(d.getTime()) ? null : d.toISOString().split('T')[0];
+    }
+
+    return {
+        ...portfolio,
+        event_date: eventDate,
+    };
+}
+
 export async function getPortfolioByTypeId(typeId) {
     const [rows] = await db.query("SELECT * FROM portfolio WHERE portfolio_type_id = ? ORDER BY event_date DESC", [typeId]);
     return rows.map(item => ({ ...item, event_date: formatDate(item.event_date) }));
@@ -136,6 +153,19 @@ export async function getSkillTypeById(id) {
 export async function addSkillType(name, color) {
     const [res] = await db.query("INSERT INTO skill_type (name, color) VALUES (?, ?)", [name, color]);
     return res.insertId;
+}
+
+export async function updateSkillTypeById(id, name, color) {
+    const [result] = await db.query(
+        "UPDATE skill_type SET name = ?, color = ? WHERE id = ?",
+        [name, color, id]
+    );
+
+    if (result.affectedRows === 0) {
+        throw new Error("Skill type not found");
+    }
+
+    return getSkillTypeById(id);
 }
 
 export async function deleteSkillTypeById(id) {

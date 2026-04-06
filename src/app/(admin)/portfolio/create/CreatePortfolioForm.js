@@ -218,7 +218,7 @@ export default function CreatePortfolioForm({ portfolioTypes, skillTypes }) {
 
             if (result.success) {
                 toast.success("Project Created Successfully!");
-                router.push("/admin/portfolio");
+                router.push("/portfolio");
             } else {
                 throw new Error(result.error || "Failed to create project");
             }
