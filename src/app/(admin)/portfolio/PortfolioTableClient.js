@@ -9,6 +9,7 @@ import { Edit3, Image as ImageIcon, Trash2, Search } from 'lucide-react';
 
 export default function PortfolioTableClient({ initialData }) {
     const [filterText, setFilterText] = useState('');
+    const [typeFilter, setTypeFilter] = useState('all');
     const [data, setData] = useState(initialData);
     
     const [isMounted, setIsMounted] = useState(false);
@@ -17,9 +18,20 @@ export default function PortfolioTableClient({ initialData }) {
         setIsMounted(true);
     }, []);
 
-    const filteredItems = data.filter(item => 
-        item.title?.toLowerCase().includes(filterText.toLowerCase())
-    );
+    const typeOptions = useMemo(() => {
+        const types = Array.from(new Set(data.map((item) => item.type_title).filter(Boolean)));
+        return types.sort((a, b) => a.localeCompare(b));
+    }, [data]);
+
+    const filteredItems = useMemo(() => {
+        const keyword = filterText.trim().toLowerCase();
+
+        return data.filter((item) => {
+            const matchesTitle = !keyword || item.title?.toLowerCase().includes(keyword);
+            const matchesType = typeFilter === 'all' || item.type_title === typeFilter;
+            return matchesTitle && matchesType;
+        });
+    }, [data, filterText, typeFilter]);
 
     const handleDelete = async (id) => {
         if (!confirm(`Are you sure you want to delete ID: ${id}?`)) return;
@@ -91,6 +103,19 @@ export default function PortfolioTableClient({ initialData }) {
                         value={filterText}
                         onChange={e => setFilterText(e.target.value)}
                     />
+                </div>
+                <div className="w-56">
+                    <select
+                        value={typeFilter}
+                        onChange={(e) => setTypeFilter(e.target.value)}
+                        className="w-full px-3 py-2 bg-white text-slate-900 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition"
+                        aria-label="Filter by item type"
+                    >
+                        <option value="all">All Types</option>
+                        {typeOptions.map((type) => (
+                            <option key={type} value={type}>{type}</option>
+                        ))}
+                    </select>
                 </div>
             </div>
 

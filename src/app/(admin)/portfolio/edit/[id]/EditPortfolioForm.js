@@ -23,6 +23,11 @@ export default function EditPortfolioForm({
     const [title, setTitle] = useState(initialPortfolio.title || "");
     const [contents, setContents] = useState(initialPortfolio.contents || "");
     const [location, setLocation] = useState(initialPortfolio.event_location || "");
+    const [facebookUrl, setFacebookUrl] = useState(initialPortfolio.facebook_url || "");
+    const [websiteUrl, setWebsiteUrl] = useState(initialPortfolio.website_url || "");
+    const [youtubeUrl, setYoutubeUrl] = useState(initialPortfolio.youtube_url || "");
+    const [instagramUrl, setInstagramUrl] = useState(initialPortfolio.instagram_url || "");
+    const [githubUrl, setGithubUrl] = useState(initialPortfolio.github_url || "");
     const [typeId, setTypeId] = useState(String(initialPortfolio.portfolio_type_id || ""));
     const [selectedSkillIds, setSelectedSkillIds] = useState(initialSkillIds || []);
     const [eventDate, setEventDate] = useState(
@@ -50,6 +55,11 @@ export default function EditPortfolioForm({
             formData.append("location", location);
             formData.append("event_date", eventDate ? eventDate.toISOString().split("T")[0] : "");
             formData.append("type_id", typeId);
+            formData.append("facebook_url", facebookUrl);
+            formData.append("website_url", websiteUrl);
+            formData.append("youtube_url", youtubeUrl);
+            formData.append("instagram_url", instagramUrl);
+            formData.append("github_url", githubUrl);
 
             selectedSkillIds.forEach((skillId) => {
                 formData.append("skill_type_ids", skillId);
@@ -146,6 +156,59 @@ export default function EditPortfolioForm({
                             className="w-full p-3 text-slate-900 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition"
                             placeholderText="YYYY-MM-DD"
                             isClearable
+                        />
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                        <label className="text-xs font-black uppercase text-slate-700 tracking-widest">Website URL</label>
+                        <input
+                            type="url"
+                            value={websiteUrl}
+                            onChange={(e) => setWebsiteUrl(e.target.value)}
+                            placeholder="https://example.com"
+                            className="w-full p-3 text-slate-900 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-xs font-black uppercase text-slate-700 tracking-widest">GitHub URL</label>
+                        <input
+                            type="url"
+                            value={githubUrl}
+                            onChange={(e) => setGithubUrl(e.target.value)}
+                            placeholder="https://github.com/username"
+                            className="w-full p-3 text-slate-900 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-xs font-black uppercase text-slate-700 tracking-widest">Facebook URL</label>
+                        <input
+                            type="url"
+                            value={facebookUrl}
+                            onChange={(e) => setFacebookUrl(e.target.value)}
+                            placeholder="https://facebook.com/username"
+                            className="w-full p-3 text-slate-900 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-xs font-black uppercase text-slate-700 tracking-widest">Instagram URL</label>
+                        <input
+                            type="url"
+                            value={instagramUrl}
+                            onChange={(e) => setInstagramUrl(e.target.value)}
+                            placeholder="https://instagram.com/username"
+                            className="w-full p-3 text-slate-900 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition"
+                        />
+                    </div>
+                    <div className="space-y-2 md:col-span-2">
+                        <label className="text-xs font-black uppercase text-slate-700 tracking-widest">YouTube URL</label>
+                        <input
+                            type="url"
+                            value={youtubeUrl}
+                            onChange={(e) => setYoutubeUrl(e.target.value)}
+                            placeholder="https://youtube.com/@channel"
+                            className="w-full p-3 text-slate-900 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition"
                         />
                     </div>
                 </div>

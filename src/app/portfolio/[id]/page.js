@@ -9,6 +9,14 @@ import FadeInOnView from "@/components/animations/fadeInOnView";
 import Image from "next/image";
 import PortfolioGallery from "@/components/PortfolioGallery"; // Client Component for LightGallery
 import { colorMap } from "@/utils/colors";
+import { Globe, Facebook, Youtube, Instagram, Github } from "lucide-react";
+
+const normalizeUrl = (url) => {
+    if (!url) return null;
+    const trimmed = url.trim();
+    if (!trimmed) return null;
+    return /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+};
 
 
 // Dynamic Metadata for SEO
@@ -96,6 +104,30 @@ export default async function PortfolioDetailPage({ params }) {
                                 <p className="text-lg text-secondary/90 leading-relaxed whitespace-pre-line font-subject">
                                     {project.contents}
                                 </p>
+
+                                <div className="flex flex-wrap items-center gap-3 mt-3">
+                                    {[
+                                        { label: "Website", url: normalizeUrl(project.website_url), Icon: Globe },
+                                        { label: "Facebook", url: normalizeUrl(project.facebook_url), Icon: Facebook },
+                                        { label: "YouTube", url: normalizeUrl(project.youtube_url), Icon: Youtube },
+                                        { label: "Instagram", url: normalizeUrl(project.instagram_url), Icon: Instagram },
+                                        { label: "GitHub", url: normalizeUrl(project.github_url), Icon: Github },
+                                    ]
+                                        .filter((link) => Boolean(link.url))
+                                        .map(({ label, url, Icon }) => (
+                                            <a
+                                                key={label}
+                                                href={url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                aria-label={label}
+                                                className="inline-flex items-center gap-2 rounded-full border border-secondary/20 bg-white px-3 py-1.5 text-sm font-semibold text-secondary transition-all hover:border-secondary/40 hover:text-primary"
+                                            >
+                                                <Icon size={16} />
+                                                <span>{label}</span>
+                                            </a>
+                                        ))}
+                                </div>
 
                                 {/* Skill Tags */}
                                 <div className="flex flex-wrap gap-2 mt-4">

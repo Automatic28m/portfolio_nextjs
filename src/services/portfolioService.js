@@ -78,13 +78,27 @@ export async function getPortfolioWithCounts() {
     }));
 }
 
-export async function createFullPortfolio({ title, contents, location, date, thumbnail, type_id, galleryUrls = [], skillIds = [] }) {
+export async function createFullPortfolio({
+    title,
+    contents,
+    location,
+    date,
+    thumbnail,
+    type_id,
+    facebook_url = null,
+    website_url = null,
+    youtube_url = null,
+    instagram_url = null,
+    github_url = null,
+    galleryUrls = [],
+    skillIds = []
+}) {
     const conn = await db.getConnection();
     try {
         await conn.beginTransaction();
         const [res] = await conn.query(
-            "INSERT INTO portfolio (title, contents, event_location, event_date, thumbnail, portfolio_type_id) VALUES (?, ?, ?, ?, ?, ?)",
-            [title, contents, location, date, thumbnail, type_id]
+            "INSERT INTO portfolio (title, contents, event_location, event_date, thumbnail, portfolio_type_id, facebook_url, website_url, youtube_url, instagram_url, github_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            [title, contents, location, date, thumbnail, type_id, facebook_url, website_url, youtube_url, instagram_url, github_url]
         );
         const pId = res.insertId;
 
@@ -105,13 +119,26 @@ export async function createFullPortfolio({ title, contents, location, date, thu
     }
 }
 
-export async function updatePortfolioFull(id, { title, contents, location, date, type_id, thumbnail, skillIds = [] }) {
+export async function updatePortfolioFull(id, {
+    title,
+    contents,
+    location,
+    date,
+    type_id,
+    thumbnail,
+    facebook_url = null,
+    website_url = null,
+    youtube_url = null,
+    instagram_url = null,
+    github_url = null,
+    skillIds = []
+}) {
     const conn = await db.getConnection();
     try {
         await conn.beginTransaction();
         const sql = thumbnail 
-            ? ["UPDATE portfolio SET title=?, contents=?, event_location=?, event_date=?, thumbnail=?, portfolio_type_id=? WHERE id=?", [title, contents, location, date, thumbnail, type_id, id]]
-            : ["UPDATE portfolio SET title=?, contents=?, event_location=?, event_date=?, portfolio_type_id=? WHERE id=?", [title, contents, location, date, type_id, id]];
+            ? ["UPDATE portfolio SET title=?, contents=?, event_location=?, event_date=?, thumbnail=?, portfolio_type_id=?, facebook_url=?, website_url=?, youtube_url=?, instagram_url=?, github_url=? WHERE id=?", [title, contents, location, date, thumbnail, type_id, facebook_url, website_url, youtube_url, instagram_url, github_url, id]]
+            : ["UPDATE portfolio SET title=?, contents=?, event_location=?, event_date=?, portfolio_type_id=?, facebook_url=?, website_url=?, youtube_url=?, instagram_url=?, github_url=? WHERE id=?", [title, contents, location, date, type_id, facebook_url, website_url, youtube_url, instagram_url, github_url, id]];
 
         await conn.query(...sql);
         await conn.query("DELETE FROM portfolio_skill_types WHERE portfolio_id = ?", [id]);

@@ -150,6 +150,11 @@ export default function CreatePortfolioForm({ portfolioTypes, skillTypes }) {
             const location = formData.get("location");
             const type_id = formData.get("type_id");
             const skillIds = formData.getAll("skill_type_ids");
+            const facebook_url = formData.get("facebook_url") || "";
+            const website_url = formData.get("website_url") || "";
+            const youtube_url = formData.get("youtube_url") || "";
+            const instagram_url = formData.get("instagram_url") || "";
+            const github_url = formData.get("github_url") || "";
             const thumbnailFile = formData.get("thumbnail");
             const galleryFiles = formData.getAll("gallery_images").filter(
                 (file) => file && file.size > 0
@@ -210,6 +215,11 @@ export default function CreatePortfolioForm({ portfolioTypes, skillTypes }) {
                 event_date: eventDateString,
                 type_id,
                 skill_type_ids: skillIds,
+                facebook_url,
+                website_url,
+                youtube_url,
+                instagram_url,
+                github_url,
                 thumbnailUrl,
                 galleryUrls,
             });
@@ -235,7 +245,7 @@ export default function CreatePortfolioForm({ portfolioTypes, skillTypes }) {
             <Toaster />
             <form onSubmit={handleSubmit} className="bg-white text-slate-900 p-8 rounded-2xl shadow-sm border border-slate-100 space-y-8">
                 <div className="border-b border-slate-100 pb-4">
-                    <h2 className="text-2xl font-bold font-durer text-slate-900 text-3xl">Create New Project</h2>
+                    <h2 className="text-3xl font-bold font-durer text-slate-900">Create New Project</h2>
                     <p className="text-slate-700 text-sm">Fill in the details to update your RMUTT portfolio.</p>
                 </div>
 
@@ -280,7 +290,31 @@ export default function CreatePortfolioForm({ portfolioTypes, skillTypes }) {
                     </div>
                 </div>
 
-                {/* 4. Images Section */}
+                {/* 4. External Links */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                        <label className="text-xs font-black uppercase text-slate-700 tracking-widest">Website URL</label>
+                        <input name="website_url" type="url" placeholder="https://example.com" className="w-full p-3 text-slate-900 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition" />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-xs font-black uppercase text-slate-700 tracking-widest">GitHub URL</label>
+                        <input name="github_url" type="url" placeholder="https://github.com/username" className="w-full p-3 text-slate-900 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition" />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-xs font-black uppercase text-slate-700 tracking-widest">Facebook URL</label>
+                        <input name="facebook_url" type="url" placeholder="https://facebook.com/username" className="w-full p-3 text-slate-900 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition" />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-xs font-black uppercase text-slate-700 tracking-widest">Instagram URL</label>
+                        <input name="instagram_url" type="url" placeholder="https://instagram.com/username" className="w-full p-3 text-slate-900 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition" />
+                    </div>
+                    <div className="space-y-2 md:col-span-2">
+                        <label className="text-xs font-black uppercase text-slate-700 tracking-widest">YouTube URL</label>
+                        <input name="youtube_url" type="url" placeholder="https://youtube.com/@channel" className="w-full p-3 text-slate-900 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition" />
+                    </div>
+                </div>
+
+                {/* 5. Images Section */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
                     <div className="space-y-2">
                         <label className="text-xs font-black uppercase text-slate-500">Thumbnail (Single)</label>
@@ -292,7 +326,7 @@ export default function CreatePortfolioForm({ portfolioTypes, skillTypes }) {
                     </div>
                 </div>
 
-                {/* 5. Skill Tags Checklist */}
+                {/* 6. Skill Tags Checklist */}
                 <div className="space-y-4">
                     <label className="text-xs font-black uppercase text-slate-700 tracking-widest">Technologies / Skill Tags</label>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -317,7 +351,7 @@ export default function CreatePortfolioForm({ portfolioTypes, skillTypes }) {
                     </div>
                 </div>
 
-                {/* 6. Action Button */}
+                {/* 7. Action Button */}
                 <div className="pt-4">
                     <button
                         disabled={loading}

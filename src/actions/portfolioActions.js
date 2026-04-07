@@ -13,6 +13,11 @@ export async function createPortfolioAction(payload) {
         const location = isFormData ? payload.get("location") : payload.location;
         const date = isFormData ? payload.get("event_date") : payload.event_date;
         const type_id = isFormData ? payload.get("type_id") : payload.type_id;
+        const facebook_url = isFormData ? payload.get("facebook_url") : payload.facebook_url;
+        const website_url = isFormData ? payload.get("website_url") : payload.website_url;
+        const youtube_url = isFormData ? payload.get("youtube_url") : payload.youtube_url;
+        const instagram_url = isFormData ? payload.get("instagram_url") : payload.instagram_url;
+        const github_url = isFormData ? payload.get("github_url") : payload.github_url;
         const skillIds = isFormData
             ? payload.getAll("skill_type_ids")
             : payload.skill_type_ids || payload.skillIds || [];
@@ -44,6 +49,11 @@ export async function createPortfolioAction(payload) {
             date,
             thumbnail: thumbnailUrl,
             type_id,
+            facebook_url,
+            website_url,
+            youtube_url,
+            instagram_url,
+            github_url,
             galleryUrls,
             skillIds,
         });
@@ -70,6 +80,11 @@ export async function updatePortfolioAction(id, formData) {
         const location = formData.get("location");
         const date = formData.get("event_date") || null;
         const type_id = formData.get("type_id");
+        const facebook_url = formData.get("facebook_url") || null;
+        const website_url = formData.get("website_url") || null;
+        const youtube_url = formData.get("youtube_url") || null;
+        const instagram_url = formData.get("instagram_url") || null;
+        const github_url = formData.get("github_url") || null;
         const skillIds = formData.getAll("skill_type_ids");
 
         // Handle Optional Thumbnail Update
@@ -90,6 +105,11 @@ export async function updatePortfolioAction(id, formData) {
         await service.updatePortfolioFull(id, {
             title, contents, location, date, type_id,
             thumbnail: thumbnailUrl,
+            facebook_url,
+            website_url,
+            youtube_url,
+            instagram_url,
+            github_url,
             skillIds
         });
 
