@@ -93,64 +93,30 @@ export default async function PortfolioPage() {
 				{/* Projects Section */}
 				<PortfolioSection title="Projects" description="A showcase of my recent projects and contributions." id="projects" data={projects} />
 
-				{/* Achievements Section - With Background Image */}
-				<BackgroundImageSection
+				{/* Achievements Section */}
+				<PortfolioSection
+					title="Achievements"
+					description="My successful accomplishments"
 					id="achievements"
+					data={achievements}
+					useBackground
 					imageSrc="/images/bg.jpg"
 					imageAlt="Achievements Background"
-					className="px-6 py-20 w-full"
-					overlayOpacity="bg-primary/35"
-				>
-					<div className="max-w-5xl mx-auto">
-						<h2 className="text-6xl font-durer font-semibold text-left mb-3 text-primary">Achievements</h2>
-						<p className="text-lg text-secondary/80 mb-12">My successful accomplishments</p>
-						<div className="grid gap-8 md:grid-cols-2">
-							{await Promise.all(achievements.map(async (item, index) => {
-								const { getSkillTypesByPortfolioId } = await import("@/services/portfolioService");
-								const skillTypes = await getSkillTypesByPortfolioId(item.id);
-								return (
-									<PortfolioCard
-										item={item}
-										index={index}
-										key={item.id}
-										skillTypes={skillTypes}
-									/>
-								);
-							}))}
-						</div>
-					</div>
-				</BackgroundImageSection>
+				/>
 
 				{/* Internship Experiences Section */}
 				<PortfolioSection title="Internship Experiences" description={"Experience in professional working"} id="internships" data={internships} />
 
-				{/* Academic Activities Section - With Background Image */}
-				<BackgroundImageSection
+				{/* Academic Activities Section */}
+				<PortfolioSection
+					title="Academic Activities"
+					description="My academic achievements and involvement"
 					id="activities"
+					data={activities}
+					useBackground
 					imageSrc="/images/bg.jpg"
 					imageAlt="Activities Background"
-					className="px-6 py-20 w-full"
-					overlayOpacity="bg-primary/35"
-				>
-					<div className="max-w-5xl mx-auto">
-						<h2 className="text-6xl font-durer font-semibold text-left mb-3 text-primary">Academic Activities</h2>
-						<p className="text-lg text-secondary/80 mb-12">My academic achievements and involvement</p>
-						<div className="grid gap-8 md:grid-cols-2">
-							{await Promise.all(activities.map(async (item, index) => {
-								const { getSkillTypesByPortfolioId } = await import("@/services/portfolioService");
-								const skillTypes = await getSkillTypesByPortfolioId(item.id);
-								return (
-									<PortfolioCard
-										item={item}
-										index={index}
-										key={item.id}
-										skillTypes={skillTypes}
-									/>
-								);
-							}))}
-						</div>
-					</div>
-				</BackgroundImageSection>
+				/>
 
 				{/* Education Section */}
 				<section id="educations" className="px-6 py-20 bg-surface">
@@ -241,28 +207,54 @@ export default async function PortfolioPage() {
 	);
 }
 
-async function PortfolioSection({ title, description, id, data }) {
+async function PortfolioSection({
+	title,
+	description,
+	id,
+	data,
+	useBackground = false,
+	imageSrc = "/images/bg.jpg",
+	imageAlt = "Section Background"
+}) {
+	const cards = (
+		<div className="max-w-5xl mx-auto">
+			<h2 className="text-6xl font-durer font-semibold text-left mb-3 text-primary">{title}</h2>
+			{description && <p className="text-lg text-secondary/80 mb-12">{description}</p>}
+			<div className="grid gap-4 md:grid-cols-2">
+				{await Promise.all(data.map(async (item, index) => {
+					const { getSkillTypesByPortfolioId } = await import("@/services/portfolioService");
+					const skillTypes = await getSkillTypesByPortfolioId(item.id);
+
+					return (
+						<PortfolioCard
+							item={item}
+							index={index}
+							key={item.id}
+							skillTypes={skillTypes}
+						/>
+					);
+				}))}
+			</div>
+		</div>
+	);
+
+	if (useBackground) {
+		return (
+			<BackgroundImageSection
+				id={id}
+				imageSrc={imageSrc}
+				imageAlt={imageAlt}
+				className="px-6 py-20 w-full"
+				overlayOpacity="bg-primary/35"
+			>
+				{cards}
+			</BackgroundImageSection>
+		);
+	}
+
 	return (
 		<section id={id} className="px-6 py-20 bg-surface">
-			<div className="max-w-5xl mx-auto">
-				<h2 className="text-6xl font-durer font-semibold text-left mb-3 text-primary">{title}</h2>
-				{description && <p className="text-lg text-secondary/80 mb-12">{description}</p>}
-				<div className="grid gap-3 md:grid-cols-2">
-					{await Promise.all(data.map(async (item, index) => {
-						const { getSkillTypesByPortfolioId } = await import("@/services/portfolioService");
-						const skillTypes = await getSkillTypesByPortfolioId(item.id);
-
-						return (
-							<PortfolioCard
-								item={item}
-								index={index}
-								key={item.id}
-								skillTypes={skillTypes}
-							/>
-						);
-					}))}
-				</div>
-			</div>
+			{cards}
 		</section>
 	);
 }

@@ -47,6 +47,15 @@
 
 /* 3. BASE STYLES */
 @layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 4.5rem;
+  }
+
+  section[id] {
+    scroll-margin-top: 4.5rem;
+  }
+
   body {
     @apply font-subject antialiased;
     background: var(--color-background);

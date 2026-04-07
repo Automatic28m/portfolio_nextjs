@@ -33,6 +33,7 @@ export default function Navbar() {
         { id: 'projects', name: 'Projects', link: '/#projects' },
         { id: 'achievements', name: 'Achievements', link: '/#achievements' },
         { id: 'educations', name: 'Educations', link: '/#educations' },
+        { id: 'contact', name: 'Contact', link: '/#contact' },
     ];
 
     return (
@@ -41,7 +42,7 @@ export default function Navbar() {
                 <div className="max-w-7xl mx-auto px-6 w-full flex items-center justify-between">
                     <Link href="/" className="z-60 flex items-center gap-2">
                         <span className="font-durer text-2xl font-bold text-surface uppercase">
-                            Phanlop's Portfolio
+                            Phanlop&apos;s Portfolio
                         </span>
                     </Link>
 
@@ -51,7 +52,7 @@ export default function Navbar() {
                             <Link
                                 key={item.id}
                                 href={item.link}
-                                className="text-surface font-durer text-md uppercase tracking-widest hover:opacity-70 transition-opacity"
+                                className="text-surface font-durer text-sm uppercase tracking-widest hover:opacity-70 transition-opacity"
                             >
                                 {item.name}
                             </Link>

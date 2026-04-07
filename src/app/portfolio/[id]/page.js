@@ -1,6 +1,6 @@
-import { 
-    getPortfolioById, 
-    getSkillTypesByPortfolioId, 
+import {
+    getPortfolioById,
+    getSkillTypesByPortfolioId,
 } from "@/services/portfolioService";
 import { getGalleryByPortfolioId } from "@/services/galleryService"; // Assume you have this service
 import Navbar from "@/components/navbar";
@@ -8,6 +8,8 @@ import Footer from "@/components/footer";
 import FadeInOnView from "@/components/animations/fadeInOnView";
 import Image from "next/image";
 import PortfolioGallery from "@/components/PortfolioGallery"; // Client Component for LightGallery
+import { colorMap } from "@/utils/colors";
+
 
 // Dynamic Metadata for SEO
 export async function generateMetadata({ params }) {
@@ -54,7 +56,7 @@ export default async function PortfolioDetailPage({ params }) {
     return (
         <div className="flex flex-col min-h-screen bg-surface">
             <Navbar />
-            
+
             <main className="grow pt-24 pb-20 px-6">
                 <article className="max-w-4xl mx-auto">
                     {dataLoadError && (
@@ -96,15 +98,20 @@ export default async function PortfolioDetailPage({ params }) {
                                 </p>
 
                                 {/* Skill Tags */}
-                                <div className="flex flex-wrap gap-2 pt-4">
-                                    {skillTypes.map((skill, idx) => (
-                                        <span
-                                            key={idx}
-                                            className="px-3 py-1 text-xs font-bold rounded-full bg-secondary/10 text-secondary border border-secondary/20"
-                                        >
-                                            {skill.name}
-                                        </span>
-                                    ))}
+                                <div className="flex flex-wrap gap-2 mt-4">
+                                    {skillTypes.map((skill, idx) => {
+                                        // Look up the classes based on the color string from DB (e.g., "blue")
+                                        const colorClasses = colorMap[skill.color?.toLowerCase()] || colorMap.gray;
+
+                                        return (
+                                            <span
+                                                key={idx}
+                                                className={`px-2 py-1 text-[10px] font-bold rounded border ${colorClasses}`}
+                                            >
+                                                {skill.name}
+                                            </span>
+                                        );
+                                    })}
                                 </div>
                             </FadeInOnView>
 
