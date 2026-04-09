@@ -13,10 +13,11 @@ import LogoScrollerComponent from "@/components/logoScrollerComponent";
 import PortfolioCard from "@/components/portfolioCard";
 import FadeInOnView from "@/components/animations/fadeInOnView";
 import BackgroundImageSection from "@/components/BackgroundImageSection";
+import HardwareSection from "@/components/sections/HardwareSection";
+import hardwareItems from "@/data/hardware.json";
 
 // Sections
 import HeroSection from "@/components/sections/HeroSection";
-import AboutSection from "@/components/sections/AboutSection";
 import StorySection from "@/components/sections/StorySection";
 import { GraduationCap } from "lucide-react";
 
@@ -60,40 +61,37 @@ export default async function PortfolioPage() {
 			<Navbar />
 
 			<main className="pt-16 min-h-screen bg-surface text-primary">
-
 				{dataLoadError && (
 					<section className="px-6 pt-6">
-						<div className="max-w-5xl mx-auto rounded-lg border border-accent/40 bg-accent/15 px-4 py-3 text-primary">
+						<div className="mx-auto max-w-5xl rounded-lg border border-accent/40 bg-accent/15 px-4 py-3 text-primary">
 							{dataLoadError}
 						</div>
 					</section>
 				)}
 
 				<HeroSection />
-				{/* <AboutSection /> */}
 				<StorySection />
 
-				{/* Skills Section - With Background Image */}
 				<BackgroundImageSection
 					id="skills"
 					imageSrc="/images/bg.jpg"
 					imageAlt="Skills Background"
-					className="px-6 py-20 w-full"
+					className="w-full px-6 py-20"
 					overlayOpacity="bg-primary/35"
 				>
-					<div className="max-w-5xl mx-auto text-white">
-						<h2 className="text-6xl font-durer font-semibold text-left mb-3 text-primary">Tech Stacks</h2>
-						<p className="text-lg text-secondary/80 mb-12 text-left">The tools, apps, devices, and libraries I use to build, design, and ship.</p>
-						<div className="mt-12 ">
+					<div className="mx-auto max-w-5xl text-white">
+						<h2 className="mb-3 text-left text-6xl font-durer font-semibold text-primary">Tech Stacks</h2>
+						<p className="mb-12 text-left text-lg text-secondary/80">The tools, apps, devices, and libraries I use to build, design, and ship.</p>
+						<div className="mt-12">
 							<LogoScrollerComponent items={skills} />
 						</div>
 					</div>
 				</BackgroundImageSection>
 
-				{/* Projects Section */}
+				<HardwareSection items={hardwareItems} />
+
 				<PortfolioSection title="Projects" description="A showcase of my recent projects and contributions." id="projects" data={projects} />
 
-				{/* Achievements Section */}
 				<PortfolioSection
 					title="Achievements"
 					description="My successful accomplishments"
@@ -104,10 +102,8 @@ export default async function PortfolioPage() {
 					imageAlt="Achievements Background"
 				/>
 
-				{/* Internship Experiences Section */}
-				<PortfolioSection title="Internship Experiences" description={"Experience in professional working"} id="internships" data={internships} />
+				<PortfolioSection title="Internship Experiences" description="Experience in professional working" id="internships" data={internships} />
 
-				{/* Academic Activities Section */}
 				<PortfolioSection
 					title="Academic Activities"
 					description="My academic achievements and involvement"
@@ -118,8 +114,7 @@ export default async function PortfolioPage() {
 					imageAlt="Activities Background"
 				/>
 
-				{/* Education Section */}
-				<section id="educations" className="px-6 py-20 bg-surface">
+				<section id="educations" className="bg-surface px-6 py-20">
 					<FadeInOnView>
 						<h2 className="text-3xl font-durer font-semibold text-center mb-2 text-primary">Education</h2>
 						<p className="text-center text-secondary/80 mb-14 max-w-2xl mx-auto">

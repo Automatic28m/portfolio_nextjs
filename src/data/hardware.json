@@ -1,0 +1,42 @@
+{
+  "slides": [
+    {
+      "title": "ESP32",
+      "description": "Leveraged for high-performance applications like AirMonitorPro, focusing on real-time data streaming, dual-core processing, and integrated Wi-Fi/Bluetooth stacks.",
+      "imageSrc": "/images/hardwareImages/esp32.png",
+      "imageAlt": "ESP32 microcontroller"
+    },
+    {
+      "title": "ESP8266",
+      "description": "Experienced in interfacing various modules including RFID readers, DHT22 sensors, and custom logic circuits for smart automation.",
+      "imageSrc": "/images/hardwareImages/esp8266.png",
+      "imageAlt": "ESP8266 microcontroller"
+    },
+    {
+      "title": "Raspberry Pi 3 Model B+",
+      "description": "Utilizing Raspberry Pi for higher-level circuit control through Linux-based environments, bridging the gap between software OS and GPIO interaction.",
+      "imageSrc": "/images/hardwareImages/raspberrypi.png",
+      "imageAlt": "Raspberry Pi 3 Model B+ board"
+    },
+    {
+      "title": "Arduino Uno",
+      "description": "Where it all started. Mastered the fundamentals of circuit design, I2C communication, and human-machine interfaces (LCDs, tactile inputs, and PWM).",
+      "imageSrc": "/images/hardwareImages/arduinoUno.png",
+      "imageAlt": "Arduino Uno board"
+    }
+  ],
+  "proficiencies": [
+    {
+      "title": "Protocols & Communication",
+      "description": "Proficient in I2C, UART, and SPI for chip-to-chip data transfer, as well as MQTT for IoT cloud connectivity."
+    },
+    {
+      "title": "Sensor Interfacing",
+      "description": "Hands-on experience with environmental sensors (DHT22, GP2Y1014AU), security modules (RFID), and various analog/digital transducers."
+    },
+    {
+      "title": "System Design",
+      "description": "Skilled in moving from breadboard prototyping to stable, long-term deployments for environmental monitoring."
+    }
+  ]
+}
